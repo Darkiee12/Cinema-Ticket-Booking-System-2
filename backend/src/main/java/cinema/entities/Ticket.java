@@ -38,7 +38,7 @@ public class Ticket {
     private Show show;
 
     @JsonIgnore
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "ticket_id")
     private Set<ShowSeat> showSeat;
 }

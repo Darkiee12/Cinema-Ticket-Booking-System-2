@@ -38,12 +38,12 @@ public class Show {
     private Movie movie;
 
     @JsonIgnore
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "show_id")
     private Set<Ticket> tickets;
 
     @JsonIgnore
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "show_id")
     private Set<ShowSeat> showsSeats;
 }

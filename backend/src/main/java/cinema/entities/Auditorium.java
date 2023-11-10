@@ -31,12 +31,12 @@ public class Auditorium {
     private Cinema cinema;
 
     @JsonIgnore
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "auditorium_id", referencedColumnName = "auditorium_id")
     private Set<AuditoriumSeat> auditoriumSeats;
 
     @JsonIgnore
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "auditorium_id", referencedColumnName = "auditorium_id")
     private Set<Show> shows;
 }

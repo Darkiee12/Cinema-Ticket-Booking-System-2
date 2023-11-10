@@ -32,7 +32,7 @@ public class AuditoriumSeat {
     private Auditorium auditorium;
 
     @JsonIgnore
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "auditorium_seat_id", referencedColumnName = "auditorium_seat_id")
     private Set<ShowSeat> showSeats;
 }

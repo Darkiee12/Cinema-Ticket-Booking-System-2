@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface TicketRepository extends JpaRepository<Ticket, String>{
+public interface TicketRepository extends JpaRepository<Ticket, Long>{
     Ticket findByTicketId(Long ticketId);
     List<Ticket> findAll();
     Ticket save(Ticket ticket);
