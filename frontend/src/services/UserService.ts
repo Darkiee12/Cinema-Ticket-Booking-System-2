@@ -1,6 +1,6 @@
-import axios from 'axios';
-import User from '../models/User';
-const USER_API = 'http://localhost:8080/users';
+import axios from "axios";
+import User from "../models/User";
+const USER_API = "http://localhost:8080/users";
 
 class UserService {
   public async getUsers(): Promise<User[]> {

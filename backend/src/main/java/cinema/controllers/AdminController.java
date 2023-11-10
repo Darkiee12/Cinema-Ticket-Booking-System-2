@@ -1,22 +1,27 @@
 package cinema.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import cinema.services.OMDBService;
-import reactor.core.publisher.Mono;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import org.springframework.web.bind.annotation.RestController;
+
+import cinema.entities.Movie;
+import cinema.services.MovieService;
+
+
+@CrossOrigin(origins="http://localhost:3000")
 @RestController
 public class AdminController {
-    OMDBService omdbService;
+    @Autowired MovieService movieService;
 
-    @Autowired
-    public void OmdbController(OMDBService omdbService) {
-        this.omdbService = omdbService;
+    @GetMapping("/admin")
+    public Movie getMovie(String title){
+        return movieService.getMovie(title);
     }
-
-    @GetMapping("/search")
-    public Mono<String> searchMoviesByTitle(@RequestParam String title) {
-        return omdbService.searchMoviesByTitle(title);
+    @PostMapping("/admin")
+    public Movie addMovie(@RequestBody Movie movie) {
+        return movieService.saveMovie(movie);
     }
 }

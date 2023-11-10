@@ -21,8 +21,14 @@ public class Movie {
     @Column(name = "imdb_id", unique = true, length = 20)
     private String imdbId;
 
+    @Column(name = "tmdb_id", unique = true, length = 20)
+    private String tmdbId;
+
     @Column(name = "title", length = 255)
     private String title;
+
+    @Column(name = "original_title", length = 255)
+    private String originalTitle;
 
     @Column(name = "year")
     private Integer year;
@@ -48,6 +54,10 @@ public class Movie {
     @Column(name = "actors", length = 255)
     private String actors;
 
+    @Column(name = "production_companies", length = 255)
+    @JdbcTypeCode(SqlTypes.JSON)
+    private JsonNode productionCompanies;
+
     @Column(name = "plot", columnDefinition = "TEXT")
     private String plot;
 
@@ -63,6 +73,10 @@ public class Movie {
     @Column(name = "poster", columnDefinition = "TEXT")
     private String poster;
 
+    @Column(name = "tagline", length = 255)
+    private String tagline;
+
+    @Column(name = "ratings", columnDefinition = "JSON")
     @JdbcTypeCode(SqlTypes.JSON)
     private JsonNode ratings;
 
@@ -90,11 +104,11 @@ public class Movie {
     @Column(name = "website", length = 255, columnDefinition = "character varying(255) default 'N/A'")
     private String website;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "imdb_id", referencedColumnName = "imdb_id")
     private Set<Show> shows;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "imdb_id", referencedColumnName = "imdb_id")
     private Set<Comment> comments;
 }

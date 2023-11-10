@@ -33,7 +33,7 @@ public class User{
     private Role role;
 
     @JsonIgnore
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private Set<Ticket> tickets;
 }

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import MovieService from "../services/MovieService";
-import Movie from "../models/Movie";
+import { Movie } from "../models/Movie";
 
 export default function ListMovieComponent(): JSX.Element {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -13,7 +13,6 @@ export default function ListMovieComponent(): JSX.Element {
 
   return (
     <div>
-
       <h2 className="text-center">movies</h2>
       <div className="row">
         <table className="table table-striped table-bordered">

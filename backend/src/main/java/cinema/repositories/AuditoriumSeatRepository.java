@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface AuditoriumSeatRepository extends JpaRepository<AuditoriumSeat, String> {
+public interface AuditoriumSeatRepository extends JpaRepository<AuditoriumSeat, Long> {
     AuditoriumSeat findByAuditoriumSeatId(Long auditoriumSeatId);
     List<AuditoriumSeat> findAll();
     AuditoriumSeat save(AuditoriumSeat auditoriumSeat);

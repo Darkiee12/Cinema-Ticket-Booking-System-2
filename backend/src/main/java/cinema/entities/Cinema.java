@@ -34,7 +34,7 @@ public class Cinema {
     private String email;
 
     @JsonIgnore
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "cinema_id", referencedColumnName = "cinema_id")
     private Set<Auditorium> auditoriumLists;
 }
