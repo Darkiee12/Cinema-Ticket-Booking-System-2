@@ -1,6 +1,5 @@
 import {useState, FormEvent} from 'react';
 import axios from 'axios';
-import { MovieOMDB } from '../models/MovieOMDB';
 import defaultMoviePoster from "../assets/movie_default.jpg";
 const API_KEY = "4812f791";
 
