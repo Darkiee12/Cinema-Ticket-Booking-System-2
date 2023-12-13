@@ -16,10 +16,6 @@ import cinema.services.MovieService;
 public class AdminController {
     @Autowired MovieService movieService;
 
-    @GetMapping("/admin")
-    public Movie getMovie(String title){
-        return movieService.getMovie(title);
-    }
     @PostMapping("/admin")
     public Movie addMovie(@RequestBody Movie movie) {
         return movieService.saveMovie(movie);

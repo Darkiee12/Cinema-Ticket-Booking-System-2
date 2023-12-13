@@ -23,14 +23,14 @@ import {
 import { RawMovie } from "../models/Movie";
 import Actor from "../models/Actor";
 import { convertMovie } from "../models/Movie";
-import defaultMoviePoster from "../assets/default.jpg";
-import defaultBackground from "../assets/background.jpg";
-import imdbLogo from "../assets/imdb.png";
-import rottenTomatoesLogo from "../assets/Rotten_Tomatoes.png";
-import metacriticLogo from "../assets/Metacritic_M.png";
-import notFoundPoster from "../assets/not_found.jpg";
-import oscarImg from "../assets/oscar.png";
-import actorDefaultPFP from "../assets/actor_default.jpg";
+import companyDefault from "../assets/movies/movie_default.jpg";
+import defaultBackground from "../assets/movies/background.jpg";
+import imdbLogo from "../assets/movies/imdb.png";
+import rottenTomatoesLogo from "../assets/movies/Rotten_Tomatoes.png";
+import metacriticLogo from "../assets/movies/Metacritic_M.png";
+import notFoundPoster from "../assets/movies/not_found.jpg";
+import oscarImg from "../assets/movies/oscar.png";
+import actorDefaultPFP from "../assets/movies/actor_default.jpg";
 import "../index.css";
 import { dateConverter } from "../utils/date";
 
@@ -96,63 +96,65 @@ export default function AddMovie() {
     setTimeout(fadeOut, 5000); // 5 seconds (5000 milliseconds)
   }, []);
   return (
-    <div
-      className="relative w-100% h-[80vh] bg-center bg-cover bg-no-repeat"
-      id="bg"
-    >
-      <div></div>
-      <div className="flex flex-wrap w-full h-full shadow-[5px 5px 115px -14px black] rounded mb-0">
-        <PosterComponent poster={poster(movie)} />
-        <div className="w-[68%]">
-          <div className="w-full h-[5vh] flex mx-auto items-center justify-center">
-            <form onSubmit={handleSearch} className="">
-              <input
-                className="w-[85%] h-8 text-[#9DBFAF] rounded-l-[5px] border-3 border-solid border-[#00B4CC] focus:text-[#00B4CC] outline-none"
-                type="search"
-                placeholder="Search a movie by title or IMDb ID"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
+    <div>
+      <div
+        className="relative w-100% h-[80vh] bg-center bg-cover bg-no-repeat"
+        id="bg"
+      >
+        <div></div>
+        <div className="flex flex-wrap w-full h-full shadow-[5px 5px 115px -14px black] rounded mb-0">
+          <PosterComponent poster={poster(movie)} />
+          <div className="w-[68%]">
+            <div className="w-full h-[5vh] flex mx-auto items-center justify-center">
+              <form onSubmit={handleSearch} className="">
+                <input
+                  className="w-[85%] h-8 text-[#9DBFAF] rounded-l-[5px] border-3 border-solid border-[#00B4CC] focus:text-[#00B4CC] outline-none"
+                  type="search"
+                  placeholder="Search a movie by title or IMDb ID"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                <button
+                  type="submit"
+                  className="w-[15%] h-8 border text-center text-white cursor-pointer text-lg rounded-r-[5px] border-[#00B4CC] bg-[#00B4CC]"
+                  aria-label="Search"
+                >
+                  <FontAwesomeIcon
+                    icon={faSearch}
+                    className="fa-solid fa-search"
+                  />
+                </button>
+              </form>
               <button
                 type="submit"
-                className="w-[15%] h-8 border text-center text-white cursor-pointer text-lg rounded-r-[5px] border-[#00B4CC] bg-[#00B4CC]"
-                aria-label="Search"
+                className="w-[5%] h-8 border text-center text-white cursor-pointer text-lg rounded-r-[5px] border-[#00B4CC] bg-[#00B4CC]"
+                aria-label="Submit to database"
+                onClick={submitMovie}
               >
                 <FontAwesomeIcon
-                  icon={faSearch}
-                  className="fa-solid fa-search"
+                  icon={faDatabase}
+                  className="fa-thin fa-database"
                 />
               </button>
-            </form>
-            <button
-              type="submit"
-              className="w-[5%] h-8 border text-center text-white cursor-pointer text-lg rounded-r-[5px] border-[#00B4CC] bg-[#00B4CC]"
-              aria-label="Submit to database"
-              onClick={submitMovie}
-            >
-              <FontAwesomeIcon
-                icon={faDatabase}
-                className="fa-thin fa-database"
-              />
-            </button>
-          </div>
-          {alert === null ? null : <AlertForm success={alert} />}
-          <div className="w-full text-justify py-0 ml-[1%]">
-            <div className="w-full after:clear-both before:content-[''] after:content-[''] before:table after:table zoom-100">
-              <div className="w-full block mt-[0%] mb-[0.5%] mx-[0.5%]">
-                <MovieTitle movie={movie} />
-                <br />
-                <MovieAttribute movie={movie} />
-              </div>
             </div>
-            <MoviePlot movie={movie} />
-            <MovieDetail movie={movie} />
-            <Actors queries={movie.Actors?.split(",")} />
-            <MovieRating movie={movie} />
-            <ProductionCompanies movie={movie} />
-            {/* <ActionButton movie={movie} /> */}
+            {alert === null ? null : <AlertForm success={alert} />}
+            <div className="w-full text-justify py-0 ml-[1%]">
+              <div className="w-full after:clear-both before:content-[''] after:content-[''] before:table after:table zoom-100">
+                <div className="w-full block mt-[0%] mb-[0.5%] mx-[0.5%]">
+                  <MovieTitle movie={movie} />
+                  <MovieAttribute movie={movie} />
+                </div>
+              </div>
+              <MoviePlot movie={movie} />
+              <MovieDetail movie={movie} />
+            </div>
           </div>
         </div>
+      </div>
+      <div>
+        <Actors queries={movie.Actors?.split(",")} />
+        <MovieRating movie={movie} />
+        <ProductionCompanies movie={movie} />
       </div>
     </div>
   );
@@ -160,17 +162,18 @@ export default function AddMovie() {
 
 const MovieTitle: React.FC<{ movie: Partial<RawMovie> }> = ({ movie }) => {
   return (
-    <>
-      <h1 className="text-4xl bold text-[#e7e7e7] mx-[0.5%]-2 m-0 font-montserrat">
+    <div className="w-full">
+      <h1 className="text-5xl bold text-[#e7e7e7] mx-[0.5%]-2 m-0 font-montserrat">
         {movie.title}
       </h1>
+      <div className="w-full mb-2" />
       {movie.title !== movie.original_title && (
         <h3 className="text-[#e7e7e7] mx-[0.5%]-2 m-0 font-montserrat">
           {movie.original_title}
         </h3>
       )}
       <h4 className="italic bold text-[#e7e7e7]">{movie.tagline}</h4>
-    </>
+    </div>
   );
 };
 
@@ -188,7 +191,7 @@ const PosterComponent: React.FC<{ poster: string }> = ({ poster }) => {
 
 const MovieAttribute: React.FC<{ movie: Partial<RawMovie> }> = ({ movie }) => {
   return (
-    <>
+    <div className="mt-2">
       {movie.imdbID != null && (
         <ul className="m-0 p-0 flex justify-between mx-5">
           {movie.Rated && (
@@ -248,7 +251,7 @@ const MovieAttribute: React.FC<{ movie: Partial<RawMovie> }> = ({ movie }) => {
             )}
         </ul>
       )}
-    </>
+    </div>
   );
 };
 
@@ -257,7 +260,7 @@ const MoviePlot: React.FC<{ movie: Partial<RawMovie> }> = ({ movie }) => {
     <>
       <div className="w-full after:clear-both before:content-[''] after:content-[''] before:table after:table zoom-100 mt-3">
         <div className="w-[47%] float-left block mt-[0%] mb-[0.5%] mx-[0.5%]">
-          <h5 className="text-xs text-[#e7e7e7] m-0 font-montserrat">
+          <h5 className="text-xl text-[#e7e7e7] m-0 font-montserrat">
             SUMMARY
           </h5>
         </div>
@@ -265,7 +268,7 @@ const MoviePlot: React.FC<{ movie: Partial<RawMovie> }> = ({ movie }) => {
       </div>
       <div className="w-full after:clear-both before:content-[''] after:content-[''] before:table after:table zoom-100">
         <div className="min-h-[6rem] mx-[0.5%]">
-          <p className="text-xs text-[#a2a2a2] text-justify leading-[1.3] font-sans">
+          <p className="text-xl text-[#a2a2a2] text-justify leading-[1.3] font-sans">
             {movie.overview}
           </p>
         </div>
@@ -277,15 +280,15 @@ const MoviePlot: React.FC<{ movie: Partial<RawMovie> }> = ({ movie }) => {
 const MovieDetail: React.FC<{ movie: Partial<RawMovie> }> = ({ movie }) => {
   return (
     movie && (
-      <div className="space-y-1 mx-1">
-        <div className="h-5">
-          <p className="text-xs font-light text-[#e7e7e7] italic m-0 font-sans">
+      <div className="space-y-1 mx-1 mt-5">
+        <div className="h-5 mb-2">
+          <p className="text-lg font-light text-[#e7e7e7] italic m-0 font-sans">
             <FontAwesomeIcon icon={faClapperboard} className="fa-regular" />{" "}
             {movie.Director}
           </p>
         </div>
-        <div className="h-5">
-          <p className="text-xs font-light text-[#e7e7e7] italic m-0 font-sans">
+        <div className="h-5 mb-2">
+          <p className="text-lg font-light text-[#e7e7e7] italic m-0 font-sans">
             <FontAwesomeIcon icon={faPencil} className="fa-regular" />{" "}
             {movie.Writer}
           </p>
@@ -311,13 +314,16 @@ const MovieRating: React.FC<{ movie: Partial<RawMovie> }> = ({ movie }) => {
   return (
     <div>
       <div className="block mt-[0%] mb-[0.5%] mx-[0.5%]">
-        <h5 className="text-xs text-[#e7e7e7] m-0 font-montserrat">
+        <h5 className="text-xs text-black m-0 font-montserrat">
           RATINGS & AWARDS
         </h5>
       </div>
-      <div className="flex justify-around mx-5 mt-3">
+      <div className="flex mt-3 w-full">
         {ratings.slice(0, 3).map((rating, index) => (
-          <div key={index} className="text-center flex flex-col items-center">
+          <div
+            key={index}
+            className="text-center flex flex-col items-center mx-auto w-1/4"
+          >
             <img
               src={imageSources[rating.Source as keyof typeof imageSources]}
               alt={`${rating.Source} logo`}
@@ -329,7 +335,7 @@ const MovieRating: React.FC<{ movie: Partial<RawMovie> }> = ({ movie }) => {
           </div>
         ))}
 
-        <div className="text-center flex flex-col items-center">
+        <div className="text-center flex flex-col items-center w-1/4">
           <img src={oscarImg} alt="oscar" className="h-[50px]" />
           {awards.split(".").map((award, index) => (
             <div key={index}>
@@ -449,15 +455,15 @@ const Actors: React.FC<{ queries: string[] | undefined }> = ({ queries }) => {
     <>
       <div className="w-full after:clear-both before:content-[''] after:content-[''] before:table after:table zoom-100 mt-3">
         <div className="w-[47%] float-left block mt-[0%] mb-[0.5%] mx-[0.5%]">
-          <h5 className="text-xs text-[#e7e7e7] m-0 font-montserrat">ACTORS</h5>
+          <h5 className="text-xs text-black m-0 font-montserrat">ACTORS</h5>
         </div>
       </div>
 
-      <div className="flex justify-between items-center">
+      <div className="flex items-center">
         {actors.map((actor) => (
           <div
             key={actor.results[0].id}
-            className="text-center flex flex-col items-center"
+            className="text-center flex flex-col items-center mx-auto"
           >
             <img
               src={
@@ -487,19 +493,21 @@ const ProductionCompanies: React.FC<{ movie: Partial<RawMovie> }> = ({
     <>
       <div className="w-full after:clear-both before:content-[''] after:content-[''] before:table after:table zoom-100 mt-3">
         <div className="w-[47%] float-left block mt-[0%] mb-[0.5%] mx-[0.5%]">
-          <h5 className="text-xs text-[#e7e7e7] m-0 font-montserrat">
-            COMPANIES
-          </h5>
+          <h5 className="text-xs text-black m-0 font-montserrat">COMPANIES</h5>
         </div>
       </div>
-      <div className="flex justify-between items-center">
+      <div className="flex flex-wrap">
         {movie.production_companies?.map((company) => (
           <div
             key={company.id}
-            className="text-center flex flex-col items-center"
+            className="text-center flex flex-col items-center w-1/3 p-5 mb-5"
           >
             <img
-              src={`${baseLogoUrl}${company.logo_path}`}
+              src={`${
+                company.logo_path
+                  ? baseLogoUrl + company.logo_path
+                  : companyDefault
+              }`}
               alt={`${company.name} logo`}
               className="h-[100px]"
             />

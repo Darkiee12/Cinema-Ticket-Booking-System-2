@@ -17,11 +17,17 @@ public class MovieService {
         return movieRepository.findAll();
     }
 
-    public Movie getMovie(String title) {
+    public Movie getMovieFromTitle(String title) {
       return movieRepository.findByTitle(title);
+    }
+
+    public Movie getMovieFromIMDB(String imdb) {
+      return movieRepository.findByImdbId(imdb);
     }
 
     public Movie saveMovie(Movie movie) {
       return movieRepository.save(movie);
     }
 }
+
+    
