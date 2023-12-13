@@ -1,5 +1,5 @@
 import Actor from "../models/Actor";
-import ApiCollector, { config, TMDB_API_KEY } from "../utils/api";
+import ApiCollector, { config, TMDB_API_KEY } from "../utils/externalMovieAPI";
 
 export default class ActorService {
   public static async fetchActorData(query: string): Promise<Actor | null> {

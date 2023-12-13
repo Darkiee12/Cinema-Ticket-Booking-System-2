@@ -32,4 +32,8 @@ public class CinemaService {
     public void deleteCinemaById(Long cinemaId) {
         cinemaRepository.deleteByCinemaId(cinemaId);
     }
+
+    public Cinema saveMovie(Cinema cinema) {
+      return cinemaRepository.save(cinema);
+    }
 }
