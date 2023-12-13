@@ -1,6 +1,5 @@
 package cinema.repositories;
 import cinema.entities.Comment;
-import jakarta.persistence.EntityManager;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;

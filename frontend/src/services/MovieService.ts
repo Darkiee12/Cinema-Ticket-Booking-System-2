@@ -1,5 +1,5 @@
 import axios from "axios";
-import ApiCollector, { config, OMDB_API_KEY } from "../utils/api";
+import ApiCollector, { config, OMDB_API_KEY } from "../utils/externalMovieAPI";
 import {
   ExternalID,
   Movie,
@@ -9,12 +9,12 @@ import {
   SearchTMDB,
 } from "../models/Movie";
 import { Log } from "../utils/logger";
-const MOVIE_API = "http://localhost:8080/movies";
+const MOVIE_ENDPOINT = "http://localhost:8080/movies/add-movie";
 
 export default class MovieService {
   public static async getMovies(): Promise<Movie[]> {
     try {
-      const response = await axios.get(MOVIE_API);
+      const response = await axios.get(MOVIE_ENDPOINT);
       const movies = response.data as Movie[];
       return movies;
     } catch (error) {
@@ -25,7 +25,7 @@ export default class MovieService {
 
   public static async addMovie(movie: Movie): Promise<boolean> {
     try {
-      await axios.post(MOVIE_API, movie);
+      await axios.post(MOVIE_ENDPOINT, movie);
       return true;
     } catch (error) {
       return false;
