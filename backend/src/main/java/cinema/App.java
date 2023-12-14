@@ -7,8 +7,9 @@ import cinema.utilities.Database;
 public class App {
 
 	public static void main(String[] args) {
-		Database db = new Database();
-		db.connect_to_db();
+
+		// Database db = new Database(); 
+		// db.connect_to_db();
 		SpringApplication.run(App.class, args);
 	}
 }
