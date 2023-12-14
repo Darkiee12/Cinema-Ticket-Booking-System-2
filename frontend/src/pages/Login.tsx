@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import email_icon from "../assets/login/email.png";
 import password_icon from "../assets/login/password.png";
 import { useRef } from "react";
+import UserService from "../services/UserService";
 
 const LoginSignUp = () => {
   const emailRef = useRef();
@@ -11,6 +12,7 @@ const LoginSignUp = () => {
   const loading = false;
 
   const [action, setAction] = useState("Sign Up");
+  // UserService.addUser(user);
   return (
     <div className="flex w-[600px] flex-col mt-[200px] m-auto pb-[30px] bg-[#fffff]">
       <div className="flex flex-col items-center gap-[9px] w-full mt-[30px];">
