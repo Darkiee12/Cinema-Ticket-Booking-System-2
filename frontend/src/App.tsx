@@ -1,7 +1,7 @@
 import "./App.css";
 import { Routes, Route } from "react-router";
 import NavBar from "./components/navbar";
-import ListMovieComponent from "./components/ListMovieComponent";
+import ListMovieComponent from "./pages/Movie";
 import { BrowserRouter as Router } from "react-router-dom";
 import AdminRouter from "./routes/AdminRouter/AdminRouter";
 import LoginSignUp from "./pages/Login";

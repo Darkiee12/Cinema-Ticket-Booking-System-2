@@ -79,6 +79,37 @@ export interface MovieTMDB {
 }
 
 export interface RawMovie extends MovieOMDB, MovieTMDB {}
+interface CompanyDB{
+  id: number,
+  logoPath?: string,
+  name: string,
+}
+
+interface CountryDB{
+  iso31661: string,
+  name: string,
+}
+
+interface GenreDB{
+  id: number,
+  name: string,
+}
+
+interface LanguageDB{
+  iso6391: string,
+  englishName: string,
+  name: string,
+}
+
+interface RatingDB{
+  source: string,
+  value: string,
+}
+
+interface CastMemberDB{
+  name: string,
+  role: string,
+}
 
 export interface Movie {
   imdbId: string;
@@ -89,30 +120,39 @@ export interface Movie {
   rated: string;
   released: string;
   runtime: number;
-  genre: string;
-  director: string;
-  writer: string;
-  actors: string;
-  productionCompanies: Company[];
+  genre: GenreDB[];
+  cast: CastMemberDB[];
+  companies: CompanyDB[];
   plot: string;
-  language: string;
+  language: LanguageDB[];
   originalLanguage: string;
-  country: string;
+  countries: CountryDB[];
   awards: string;
   poster: string;
   tagline: string;
-  ratings: Rating[];
+  ratings?: RatingDB[];
   metascore: number | null;
   imdbRating: number | null;
   imdbVotes: number | null;
   type: string;
-  dvd: string;
+  dvd?: string;
   boxOffice: number | null;
-  production: string;
-  website: string;
+  production?: string;
+  website?: string;
 }
 
+
 export function convertMovie(movie: RawMovie): Movie {
+  const cast: CastMemberDB[] = [];
+  movie.Actors.split(",").forEach((actor) => {
+    cast.push({ name: actor.trim(), role: "actor" });
+  });
+  movie.Director.split(",").forEach((director) => {
+    cast.push({ name: director.trim(), role: "director" });
+  });
+  movie.Writer.split(",").forEach((writer) => {
+    cast.push({ name: writer.trim(), role: "writer" });
+  });
   return {
     imdbId: movie.imdbID,
     tmdbId: movie.id,
@@ -123,19 +163,30 @@ export function convertMovie(movie: RawMovie): Movie {
     rated: movie.Rated,
     released: movie.release_date,
     runtime: movie.runtime,
-    genre: movie.genres.map((genre) => genre.name).join(", "),
-    director: movie.Director,
-    writer: movie.Writer,
-    actors: movie.Actors,
+    genre: movie.genres,
+    cast: cast,
     plot: movie.overview,
-    language: movie.spoken_languages
-      .map((language) => language.name)
-      .join(", "),
+    language: movie.spoken_languages.map((
+      language
+    ) => ({
+      iso6391: language.iso_639_1,
+      englishName: language.english_name,
+      name: language.name,
+    })
+    ),
     originalLanguage: movie.original_language,
-    productionCompanies: movie.production_companies,
-    country: movie.production_countries
-      .map((country) => country.name)
-      .join(", "),
+    companies: movie.production_companies.map((
+      company
+    ) => ({
+      id: company.id,
+      logoPath: company.logo_path,
+      name: company.name,
+    })
+    ),
+    countries: movie.production_countries.map((country) => ({
+      iso31661: country.iso_3166_1,
+      name: country.name,
+    })),
     awards: movie.Awards,
     poster: `https://image.tmdb.org/t/p/original${movie.poster_path}`,
     ratings: convertRatings(movie.Ratings),
@@ -143,18 +194,27 @@ export function convertMovie(movie: RawMovie): Movie {
     imdbRating: movie.imdbRating ? parseFloat(movie.imdbRating) : null,
     imdbVotes: movie.imdbVotes ? parseInt(movie.imdbVotes) : null,
     type: movie.Type,
-    dvd: movie.DVD,
-    boxOffice: movie.BoxOffice ? parseInt(movie.BoxOffice) : null,
-    production: movie.Production,
+    dvd: movie.DVD === "N/A" ? undefined : movie.DVD,
+    boxOffice: movie.revenue,
+    production: movie.Production === "N/A" ? undefined : movie.Production,
     website: movie.homepage,
   };
 }
 
-function convertRatings(ratings: RatingOMDB[]): Rating[] {
-  return ratings.map((rating) => {
-    return {
-      source: rating.Source,
-      value: rating.Value,
-    };
-  });
+function convertRatings(ratings: RatingOMDB[] | null): Rating[] {
+  if (!ratings) {
+    return [];
+  }
+  return ratings
+    .map((rating) => {
+      if (!rating) {
+        return null;
+      }
+      return {
+        source: rating.Source || '',
+        value: rating.Value || '',
+      };
+    })
+    .filter((rating) => rating !== null) as Rating[];
 }
+

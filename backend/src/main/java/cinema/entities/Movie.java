@@ -1,28 +1,24 @@
 package cinema.entities;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-
-import java.util.Set;
-
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.JsonNode;
+import lombok.*;
+import java.util.List;
+import com.fasterxml.jackson.annotation.*;
 
 @Entity
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "movies")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "imdbId")
 public class Movie {
 
     @Id
     @Column(name = "imdb_id", unique = true, length = 20)
     private String imdbId;
 
-    @Column(name = "tmdb_id", unique = true, length = 20)
-    private String tmdbId;
+    @Column(name = "tmdb_id", unique = true)
+    private int tmdbId;
 
     @Column(name = "title", length = 255)
     private String title;
@@ -41,31 +37,9 @@ public class Movie {
 
     @Column(name = "runtime")
     private Integer runtime;
-
-    @Column(name = "genre", length = 255)
-    private String genre;
-
-    @Column(name = "director", length = 255)
-    private String director;
-
-    @Column(name = "writer", length = 255)
-    private String writer;
-
-    @Column(name = "actors", length = 255)
-    private String actors;
-
-    @Column(name = "production_companies", length = 255)
-    @JdbcTypeCode(SqlTypes.JSON)
-    private JsonNode productionCompanies;
-
+    
     @Column(name = "plot", columnDefinition = "TEXT")
     private String plot;
-
-    @Column(name = "language", length = 100)
-    private String language;
-
-    @Column(name = "country", length = 100)
-    private String country;
 
     @Column(name = "awards", length = 255)
     private String awards;
@@ -75,10 +49,6 @@ public class Movie {
 
     @Column(name = "tagline", length = 255)
     private String tagline;
-
-    @Column(name = "ratings", columnDefinition = "JSON")
-    @JdbcTypeCode(SqlTypes.JSON)
-    private JsonNode ratings;
 
     @Column(name = "metascore")
     private Integer metascore;
@@ -95,7 +65,7 @@ public class Movie {
     @Column(name = "dvd")
     private String dvd;
 
-    @Column(name = "boxoffice")
+    @Column(name = "box_office")
     private Double boxOffice;
 
     @Column(name = "production", length = 255)
@@ -104,30 +74,64 @@ public class Movie {
     @Column(name = "website", length = 255, columnDefinition = "character varying(255) default 'N/A'")
     private String website;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "imdb_id", referencedColumnName = "imdb_id")
-    private Set<Show> shows;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "cast_member",
+            joinColumns = @JoinColumn(name = "imdb_id", referencedColumnName = "imdb_id"),
+            inverseJoinColumns = @JoinColumn(name = "person_id", referencedColumnName = "id")
+            )
+    //@JsonManagedReference    
+    private List<Person> cast;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "movies_countries",
+            joinColumns = @JoinColumn(name = "imdb_id", referencedColumnName = "imdb_id"),
+            inverseJoinColumns = @JoinColumn(name = "iso_3166_1", referencedColumnName = "iso_3166_1")
+            )
+    //@JsonManagedReference   
+    private List<Country> countries;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "movies_genres",
+            joinColumns = @JoinColumn(name = "imdb_id", referencedColumnName = "imdb_id"),
+            inverseJoinColumns = @JoinColumn(name = "genre_id", referencedColumnName = "id")
+            )
+    //@JsonManagedReference          
+    private List<Genre> genre;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "movies_languages",
+            joinColumns = @JoinColumn(name = "imdb_id", referencedColumnName = "imdb_id"),
+            inverseJoinColumns = @JoinColumn(name = "iso_639_1", referencedColumnName = "iso_639_1"))
+    //@JsonManagedReference   
+    private List<Language> language;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "movies_companies", // Rename the table to avoid conflicts
+            joinColumns = @JoinColumn(name = "imdb_id", referencedColumnName = "imdb_id"),
+            inverseJoinColumns = @JoinColumn(name = "company_id", referencedColumnName = "id"))
+	//@JsonManagedReference
+    private List<Company> companies; // Update the property name to reflect the relationship
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "movies_ratings",
+            joinColumns = @JoinColumn(name = "imdb_id", referencedColumnName = "imdb_id"),
+            inverseJoinColumns = @JoinColumn(name = "writer_id", referencedColumnName = "id")
+    )
+	//@JsonManagedReference
+    private List<Rating> ratings;
+	
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "imdb_id", referencedColumnName = "imdb_id")
-    private Set<Comment> comments;
+    private List<Show> shows;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "imdb_id", referencedColumnName = "imdb_id")
+    private List<Comment> comments;
 }
 
-
-class Json{
-    private static ObjectMapper objectMapper = getDefaultObjectMapper();
-
-    private static ObjectMapper getDefaultObjectMapper(){
-        ObjectMapper defaultObjectMapper = new ObjectMapper();
-        return defaultObjectMapper;
-    }
-
-    public static JsonNode parse(String src){
-        try{
-            return objectMapper.readTree(src);
-        }catch(Exception e){
-            e.printStackTrace();
-            return null;
-        }
-    }
-}

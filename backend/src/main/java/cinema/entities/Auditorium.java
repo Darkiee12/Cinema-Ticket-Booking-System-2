@@ -3,7 +3,7 @@ package cinema.entities;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Set;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -33,10 +33,10 @@ public class Auditorium {
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "auditorium_id", referencedColumnName = "auditorium_id")
-    private Set<AuditoriumSeat> auditoriumSeats;
+    private List<AuditoriumSeat> auditoriumSeats;
 
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "auditorium_id", referencedColumnName = "auditorium_id")
-    private Set<Show> shows;
+    private List<Show> shows;
 }
