@@ -22,15 +22,15 @@ public class ShowSeat {
     @Column(name = "status")
     private SeatStatus status;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "show_id", referencedColumnName = "show_id")
     private Show show;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "auditorium_seat_id", referencedColumnName = "auditorium_seat_id")
     private AuditoriumSeat auditoriumSeat;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ticket_id", referencedColumnName = "ticket_id")
     private Ticket ticket;
 }

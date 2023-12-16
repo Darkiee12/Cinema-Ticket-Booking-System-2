@@ -1,6 +1,6 @@
 package cinema.entities;
 import java.sql.Date;
-import java.util.Set;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -28,12 +28,12 @@ public class User{
     private Date dateOfBirth;
     @Column (name = "password")
     private String password;
-    @Column (name = "role")
+    @Column (name = "tier")
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Tier tier;
 
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
-    private Set<Ticket> tickets;
+    private List<Ticket> tickets;
 }

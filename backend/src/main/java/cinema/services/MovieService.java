@@ -28,6 +28,10 @@ public class MovieService {
     public Movie saveMovie(Movie movie) {
       return movieRepository.save(movie);
     }
+
+    public List<Movie> executeSqlQuery(String query) {
+      return movieRepository.executeCustomQuery(query); 
+  }
 }
 
     
