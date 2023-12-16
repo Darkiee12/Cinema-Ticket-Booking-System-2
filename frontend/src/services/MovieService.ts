@@ -1,36 +1,77 @@
 import axios from "axios";
 import ApiCollector, { config, OMDB_API_KEY } from "../utils/externalMovieAPI";
 import {
+  Company,
   ExternalID,
+  Genre,
   Movie,
   MovieOMDB,
   MovieTMDB,
   RawMovie,
   SearchTMDB,
+  SpokenLanguage,
 } from "../models/Movie";
 import { Log } from "../utils/logger";
-const MOVIE_ENDPOINT = "http://localhost:8080/movies/add-movie";
+const ADD_MOVIE_ENDPOINT = "http://localhost:8080/movies/add-movie";
+const GET_ALL_MOVIE_ENDPOINT = "http://localhost:8080/movies/get-all";
+const GET_MOVIE_SQL = "http://localhost:8080/movies/sql";
+const ADD_GENRE_ENDPOINT = "http://localhost:8080/genres/add-genre";
+const ADD_COMPANY_ENDPOINT = "http://localhost:8080/companies/add-company";
+
 
 export default class MovieService {
-  public static async getMovies(): Promise<Movie[]> {
+  public static async getMovies(): Promise<Movie[]|null> {
     try {
-      const response = await axios.get(MOVIE_ENDPOINT);
+      const response = await axios.get(GET_ALL_MOVIE_ENDPOINT);
       const movies = response.data as Movie[];
       return movies;
     } catch (error) {
-      // Handle errors here
-      throw error;
+      return null;
     }
   }
 
   public static async addMovie(movie: Movie): Promise<boolean> {
     try {
-      await axios.post(MOVIE_ENDPOINT, movie);
+  
+      await axios.post(ADD_MOVIE_ENDPOINT, movie);
       return true;
     } catch (error) {
+      console.log(error);
       return false;
     }
   }
+  public static async getMoviesByQuery(sql: string): Promise<Movie[]|null> {
+    const encode = encodeURIComponent(sql);
+    try {
+      const response = await axios.get(`${GET_MOVIE_SQL}?query=${encode}`);
+      if (response.status == 200){
+        return response.data as Movie[];
+      } else {
+        return null;
+      }
+    } catch (error) {
+      return null;
+    }
+  }
+}
+
+function postObjectsAsLinks<T extends Record<string, any>>(objects: T[], baseUrl: string) {
+  objects.forEach(obj => {
+    const params = Object.entries(obj)
+      .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+      .join('&');
+
+    const url = `${baseUrl}?${params}`;
+
+    axios.post(url)
+      .then(response => {
+        console.log(`Successfully posted object: ${JSON.stringify(obj)}`);
+        console.log(response.data);
+      })
+      .catch(error => {
+        console.error(`Error posting object ${JSON.stringify(obj)}:`, error);
+      });
+  });
 }
 
 const omdbEndpoint = (id: string) => `i=${id}&apikey=${OMDB_API_KEY}`;

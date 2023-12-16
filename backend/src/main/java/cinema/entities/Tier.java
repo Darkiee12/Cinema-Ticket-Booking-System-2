@@ -1,6 +1,6 @@
 package cinema.entities;
 
-public enum Role {
+public enum Tier {
     MEMBER,
     VIP,
     ADMIN

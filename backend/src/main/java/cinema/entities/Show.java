@@ -5,7 +5,7 @@ import lombok.Setter;
 import jakarta.persistence.*;
 import java.sql.Date;
 import java.sql.Time;
-import java.util.Set;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -40,10 +40,10 @@ public class Show {
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "show_id")
-    private Set<Ticket> tickets;
+    private List<Ticket> tickets;
 
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "show_id")
-    private Set<ShowSeat> showsSeats;
+    private List<ShowSeat> showsSeats;
 }
