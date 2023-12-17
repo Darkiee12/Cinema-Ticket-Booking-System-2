@@ -12,6 +12,8 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import User from "../models/User";
+import UserService from "../services/UserService";
 
 function Copyright(props: any) {
   return (
@@ -34,13 +36,19 @@ function Copyright(props: any) {
 const theme = createTheme();
 
 export default function SignUp() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    const userData: User ={
+      email: data.get("email") as string,
+      password: data.get("password") as string,
+      name:`${data.get("firstName")} ${data.get("lastName")}`,
+      gender: data.get("gender") as string,
+      phoneNumber: data.get("phone_number") as unknown as number,
+      dateOfBirth: data.get("dob") as string,
+      tier:"member",
+    };
+    await UserService.addUser(userData);
   };
 
   return (
@@ -127,7 +135,17 @@ export default function SignUp() {
                   id="phone_number"
                   label="Phone Number"
                   name="phone_number"
+                  type="number"
                   autoComplete="phone_number"
+                />
+                <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="dob"
+                  label="Date Of Birth"
+                  name="dob"
+                  type="date"
                 />
               </Grid>
               <Grid item xs={12}>
@@ -138,6 +156,7 @@ export default function SignUp() {
                   label="I want to receive inspiration, marketing promotions and updates via email."
                 />
               </Grid>
+            </Grid>
             </Grid>
             <Button
               type="submit"
