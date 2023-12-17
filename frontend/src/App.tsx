@@ -4,7 +4,8 @@ import NavBar from "./components/navbar";
 import ListMovieComponent from "./pages/Movie";
 import { BrowserRouter as Router } from "react-router-dom";
 import AdminRouter from "./routes/AdminRouter/AdminRouter";
-import LoginSignUp from "./pages/Login";
+import Login from "./pages/Login";
+import SignUp from "./pages/SignUp";
 function App() {
   return (
     <div>
@@ -12,7 +13,8 @@ function App() {
       <Router>
         <Routes>
           {/* <Route path="/" element={<Home/>}/> */}
-          <Route path="/login" element={<LoginSignUp />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/movies" element={<ListMovieComponent />} />
           {/* Include AdminRouter here */}
           <Route path="/admin/*" element={<AdminRouter />} />
