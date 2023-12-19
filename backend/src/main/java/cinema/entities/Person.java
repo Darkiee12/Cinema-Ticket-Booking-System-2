@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 @Getter
 @Setter
@@ -25,6 +26,7 @@ public class Person {
 
     @ManyToMany(mappedBy = "cast", fetch = FetchType.LAZY)
     //@JsonBackReference
+    @JsonIgnoreProperties("cast")
     private List<Movie> movies;
 
     

@@ -3,6 +3,8 @@ package cinema.entities;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -29,5 +31,6 @@ public class Language {
 
     @ManyToMany(mappedBy = "language")
     //@JsonBackReference
+    @JsonIgnoreProperties("language")
     private List<Movie> movies;
 }

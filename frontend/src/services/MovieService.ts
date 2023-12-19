@@ -15,8 +15,6 @@ import { Log } from "../utils/logger";
 const ADD_MOVIE_ENDPOINT = "http://localhost:8080/movies/add-movie";
 const GET_ALL_MOVIE_ENDPOINT = "http://localhost:8080/movies/get-all";
 const GET_MOVIE_SQL = "http://localhost:8080/movies/sql";
-const ADD_GENRE_ENDPOINT = "http://localhost:8080/genres/add-genre";
-const ADD_COMPANY_ENDPOINT = "http://localhost:8080/companies/add-company";
 
 
 export default class MovieService {
@@ -43,7 +41,7 @@ export default class MovieService {
   public static async getMoviesByQuery(sql: string): Promise<Movie[]|null> {
     const encode = encodeURIComponent(sql);
     try {
-      const response = await axios.get(`${GET_MOVIE_SQL}?query=${encode}`);
+      const response = await axios.get(`${GET_MOVIE_SQL}/${encode}`);
       if (response.status == 200){
         return response.data as Movie[];
       } else {

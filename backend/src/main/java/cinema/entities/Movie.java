@@ -80,7 +80,8 @@ public class Movie {
             joinColumns = @JoinColumn(name = "imdb_id", referencedColumnName = "imdb_id"),
             inverseJoinColumns = @JoinColumn(name = "person_id", referencedColumnName = "id")
             )
-    //@JsonManagedReference    
+    //@JsonManagedReference 
+    @JsonIgnoreProperties("movies")
     private List<Person> cast;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -90,6 +91,7 @@ public class Movie {
             inverseJoinColumns = @JoinColumn(name = "iso_3166_1", referencedColumnName = "iso_3166_1")
             )
     //@JsonManagedReference   
+    @JsonIgnoreProperties("movies")
     private List<Country> countries;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -98,7 +100,8 @@ public class Movie {
             joinColumns = @JoinColumn(name = "imdb_id", referencedColumnName = "imdb_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id", referencedColumnName = "id")
             )
-    //@JsonManagedReference          
+    //@JsonManagedReference     
+    @JsonIgnoreProperties("movies")
     private List<Genre> genre;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -107,6 +110,7 @@ public class Movie {
             joinColumns = @JoinColumn(name = "imdb_id", referencedColumnName = "imdb_id"),
             inverseJoinColumns = @JoinColumn(name = "iso_639_1", referencedColumnName = "iso_639_1"))
     //@JsonManagedReference   
+    @JsonIgnoreProperties("movies")
     private List<Language> language;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -115,6 +119,7 @@ public class Movie {
             joinColumns = @JoinColumn(name = "imdb_id", referencedColumnName = "imdb_id"),
             inverseJoinColumns = @JoinColumn(name = "company_id", referencedColumnName = "id"))
 	//@JsonManagedReference
+    @JsonIgnoreProperties("movies")
     private List<Company> companies; // Update the property name to reflect the relationship
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -124,14 +129,17 @@ public class Movie {
             inverseJoinColumns = @JoinColumn(name = "writer_id", referencedColumnName = "id")
     )
 	//@JsonManagedReference
+    @JsonIgnoreProperties("movies")
     private List<Rating> ratings;
 	
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "imdb_id", referencedColumnName = "imdb_id")
+	@JsonIgnore
     private List<Show> shows;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "imdb_id", referencedColumnName = "imdb_id")
+	@JsonIgnore
     private List<Comment> comments;
 }
 

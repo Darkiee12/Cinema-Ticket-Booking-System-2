@@ -47,8 +47,8 @@ public class MovieController {
         return movieService.saveMovie(movie);
     }
 
-    @GetMapping("/movies/sql")
-    public List<Movie> executeSql(@RequestParam String query) throws UnsupportedEncodingException {
+    @GetMapping("/movies/sql/{query}")
+    public List<Movie> executeSql(@PathVariable String query) throws UnsupportedEncodingException {
         String decodedUri = URLDecoder.decode(query, StandardCharsets.UTF_8.toString());
         return entityManager.createNativeQuery(decodedUri, Movie.class).getResultList();
     }
