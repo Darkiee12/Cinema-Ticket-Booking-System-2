@@ -22,6 +22,7 @@ public class Company {
 
     @ManyToMany(mappedBy = "companies", fetch = FetchType.LAZY) // Update mappedBy to match the property in Movie entity
     //@JsonBackReference
+    @JsonIgnore
     private List<Movie> movies;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -30,5 +31,6 @@ public class Company {
             joinColumns = @JoinColumn(name = "company_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "iso_3166_1", referencedColumnName = "iso_3166_1"))
     //@JsonManagedReference
+    @JsonIgnoreProperties("companies")
     private List<Country> countries; 
 }

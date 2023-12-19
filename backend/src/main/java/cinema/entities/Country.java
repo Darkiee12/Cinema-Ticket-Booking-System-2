@@ -5,6 +5,8 @@ import lombok.Setter;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Getter
@@ -20,9 +22,11 @@ public class Country {
 
     @ManyToMany(mappedBy = "countries", fetch = FetchType.LAZY)
     //@JsonBackReference
+    @JsonIgnoreProperties("countries")
     private List<Movie> movies;
 
     @ManyToMany(mappedBy = "countries", fetch = FetchType.LAZY)
     //@JsonBackReference
+    @JsonIgnoreProperties("countries")
     private List<Company> companies;
 }
