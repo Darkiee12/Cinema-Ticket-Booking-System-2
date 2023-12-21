@@ -1,15 +1,12 @@
 import axios from "axios";
-import ApiCollector, { config, OMDB_API_KEY } from "../utils/externalMovieAPI";
+import ApiCollector, { config, OMDB_API_KEY } from "../utils/api";
 import {
-  Company,
   ExternalID,
-  Genre,
   Movie,
   MovieOMDB,
   MovieTMDB,
   RawMovie,
   SearchTMDB,
-  SpokenLanguage,
 } from "../models/Movie";
 import { Log } from "../utils/logger";
 const ADD_MOVIE_ENDPOINT = "http://localhost:8080/movies/add-movie";
@@ -18,12 +15,12 @@ const GET_MOVIE_SQL = "http://localhost:8080/movies/sql";
 
 
 export default class MovieService {
+  private static api = new ApiCollector<Movie | Movie[]>("http://localhost:8080/movies/");
   public static async getMovies(): Promise<Movie[]|null> {
-    try {
-      const response = await axios.get(GET_ALL_MOVIE_ENDPOINT);
-      const movies = response.data as Movie[];
-      return movies;
-    } catch (error) {
+    const response = await this.api.get("get-all");
+    if(response && response instanceof Array){
+      return response;
+    } else {
       return null;
     }
   }

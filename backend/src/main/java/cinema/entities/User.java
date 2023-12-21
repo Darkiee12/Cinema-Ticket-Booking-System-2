@@ -14,7 +14,6 @@ public class User{
     @Id
     @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
     private Long userId;
     @Column(name = "name", columnDefinition = "CHARACTER VARYING(255) NOT NULL DEFAULT 'NA'")
     private String name;

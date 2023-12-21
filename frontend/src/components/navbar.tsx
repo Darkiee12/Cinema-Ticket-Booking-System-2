@@ -16,7 +16,7 @@ export default function NavBar() {
         <li className="px-4 cursor-pointer">
           <a
             className="relative flex items-center no-underline transition-all duration-[0.3s] ease-[ease-in-out] text-[white] hover:text-[#ea4f4c]"
-            href=""
+            href="/movies"
           >
             Movies
           </a>

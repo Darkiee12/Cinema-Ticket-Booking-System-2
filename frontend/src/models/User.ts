@@ -8,3 +8,8 @@ export default interface User {
   dateOfBirth: string;
   tier: string;
 }
+
+export interface Credential{
+  email: string;
+  password: string;
+}

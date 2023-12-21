@@ -14,7 +14,7 @@ export default function ListUserComponent(): JSX.Element {
   return (
     <div>
       <h2 className="text-center">Users</h2>
-      <div className="row">
+      <div className="row p-2">
         <table className="table table-striped table-bordered">
           <thead>
             <tr>
@@ -36,7 +36,7 @@ export default function ListUserComponent(): JSX.Element {
                 <td>{user.password}</td>
                 <td>{user.phoneNumber}</td>
                 <td>{user.dateOfBirth}</td>
-                <td>{user.role}</td>
+                <td>{user.tier}</td>
               </tr>
             ))}
           </tbody>

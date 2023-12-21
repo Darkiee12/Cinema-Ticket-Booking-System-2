@@ -1,12 +1,8 @@
 package cinema.entities;
-
 import lombok.Getter;
 import lombok.Setter;
-
 import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.*;
 
 @Entity

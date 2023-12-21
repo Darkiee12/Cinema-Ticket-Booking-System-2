@@ -1,4 +1,4 @@
-import * as React from "react";
+import {useState} from "react"; 
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -36,10 +36,12 @@ function Copyright(props: any) {
 const theme = createTheme();
 
 export default function SignUp() {
+  const [success, setSuccess] = useState(false);
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const userData: User ={
+    const user: User ={
       email: data.get("email") as string,
       password: data.get("password") as string,
       name:`${data.get("firstName")} ${data.get("lastName")}`,
@@ -48,7 +50,8 @@ export default function SignUp() {
       dateOfBirth: data.get("dob") as string,
       tier:"member",
     };
-    await UserService.addUser(userData);
+    await UserService.addUser(user);
+
   };
 
   return (
@@ -80,7 +83,7 @@ export default function SignUp() {
                 <TextField
                   autoComplete="given-name"
                   name="firstName"
-                  required
+                  required={true}
                   fullWidth
                   id="firstName"
                   label="First Name"
@@ -89,7 +92,7 @@ export default function SignUp() {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  required
+                  required={true}
                   fullWidth
                   id="lastName"
                   label="Last Name"
@@ -99,7 +102,7 @@ export default function SignUp() {
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  required
+                  required={true}
                   fullWidth
                   id="email"
                   label="Email Address"
@@ -109,7 +112,7 @@ export default function SignUp() {
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  required
+                  required={true}
                   fullWidth
                   name="password"
                   label="Password"
@@ -120,7 +123,7 @@ export default function SignUp() {
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  required
+                  required={true}
                   fullWidth
                   id="gender"
                   label="Gender"
@@ -130,7 +133,7 @@ export default function SignUp() {
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  required
+                  required={true}
                   fullWidth
                   id="phone_number"
                   label="Phone Number"
@@ -140,7 +143,7 @@ export default function SignUp() {
                 />
                 <Grid item xs={12}>
                 <TextField
-                  required
+                  required={true}
                   fullWidth
                   id="dob"
                   label="Date Of Birth"
