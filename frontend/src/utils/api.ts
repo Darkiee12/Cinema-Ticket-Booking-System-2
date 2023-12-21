@@ -2,14 +2,24 @@ import axios, {
   AxiosInstance,
   AxiosResponse,
   AxiosRequestConfig,
-  AxiosError,
 } from "axios";
 
 export const TMDB_API_KEY = process.env.REACT_APP_TMDB_KEY;
 export const OMDB_API_KEY = process.env.REACT_APP_OMDB_KEY;
+
+export enum HTTPStatusCode{
+  "OK" = 200,
+  "CREATED" = 201,
+  "BAD_REQUEST" = 400,
+  "UNAUTHORIZED" = 401,
+  "FORBIDDEN" = 403,
+  "NOT_FOUND" = 404,
+  "CONFLICT" = 409,
+  "INTERNAL_SERVER_ERROR" = 500,
+}
+
 export default class ApiCollector<T> {
   private axiosInstance: AxiosInstance;
-
   constructor(baseURL: string) {
     this.axiosInstance = axios.create({
       baseURL,

@@ -1,6 +1,4 @@
-// import React, { useEffect, useState } from "react";
-// import { useRef } from "react";
-// import UserService from "../services/UserService";
+
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
@@ -12,8 +10,12 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { Container } from "@mui/material";
-
+import LoginService from "../services/LoginService";
+import User, { Credential } from "../models/User";
+import { useState } from "react";
 const Login = () => {
+  const [success, setSuccess] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
   // const emailRef = useRef();
   // const passwordRef = useRef();
   // const [errors, setErrors] = useState("");
@@ -21,7 +23,21 @@ const Login = () => {
   // const loading = false;
 
   // const [action, setAction] = useState("Sign Up");
-  // UserService.addUser(user);
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const data = new FormData(e.currentTarget);
+    const credentials: Credential = {
+      email: data.get("email") as string,
+      password: data.get("password") as string,
+    };
+    const user = await LoginService.login(credentials);
+    if (user) {
+      setSuccess(true);
+      setUser(user);
+    } else {
+      alert("Login failed")
+    }
+  }
 
   return (
     <Container component="main" maxWidth="lg">
@@ -72,7 +88,7 @@ const Login = () => {
               <Box
                 component="form"
                 noValidate
-                onSubmit=""
+                onSubmit={handleSubmit}
                 sx={{ mt: 1 }}
               >
                 <TextField
@@ -114,10 +130,15 @@ const Login = () => {
                     </Link>
                   </Grid>
                   <Grid item>
-                    <Link href="#" variant="body2">
-                      {"Don't have an account? Sign Up"}
+                    <Link href="/signup" variant="body2">
+                      {"Don't have an account?"}
                     </Link>
                   </Grid>
+                  {success && (
+                    <Typography className="text-[0.1rem] font-light italic">
+                      Hi, {user?.name}! Redirecting you soon...
+                    </Typography>
+                  )}
                 </Grid>
               </Box>
             </Box>

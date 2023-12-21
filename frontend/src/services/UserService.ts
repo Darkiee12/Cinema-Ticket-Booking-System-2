@@ -1,7 +1,7 @@
 import axios from "axios";
 import User from "../models/User";
 const ADD_USER_ENDPOINT = "http://localhost:8080/users/add";
-const GET_USER_ENDPOINT = "http://localhost:8080/users/get";
+const GET_USER_ENDPOINT = "http://localhost:8080/users/get-all";
 
 export default class UserService {
   public static async getUsers(): Promise<User[]> {

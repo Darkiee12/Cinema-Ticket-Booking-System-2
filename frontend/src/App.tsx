@@ -6,6 +6,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import AdminRouter from "./routes/AdminRouter/AdminRouter";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
+import ListUserComponent from "./pages/User";
 function App() {
   return (
     <div>
@@ -15,6 +16,7 @@ function App() {
           {/* <Route path="/" element={<Home/>}/> */}
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/user" element={<ListUserComponent/>} /> 
           <Route path="/movies" element={<ListMovieComponent />} />
           {/* Include AdminRouter here */}
           <Route path="/admin/*" element={<AdminRouter />} />
