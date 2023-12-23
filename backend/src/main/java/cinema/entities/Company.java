@@ -1,4 +1,5 @@
 package cinema.entities;
+
 import java.util.List;
 import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
@@ -21,16 +22,12 @@ public class Company {
     private String name;
 
     @ManyToMany(mappedBy = "companies", fetch = FetchType.LAZY) // Update mappedBy to match the property in Movie entity
-    //@JsonBackReference
-    @JsonIgnore
+
+    @JsonIgnoreProperties("companies")
     private List<Movie> movies;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "companies_countries", 
-            joinColumns = @JoinColumn(name = "company_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "iso_3166_1", referencedColumnName = "iso_3166_1"))
-    //@JsonManagedReference
+    @JoinTable(name = "companies_countries", joinColumns = @JoinColumn(name = "company_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "iso_3166_1", referencedColumnName = "iso_3166_1"))
     @JsonIgnoreProperties("companies")
-    private List<Country> countries; 
+    private List<Country> countries;
 }

@@ -17,7 +17,7 @@ public class MovieService {
         return movieRepository.findAll();
     }
 
-    public Movie getMovieFromTitle(String title) {
+    public List<Movie> getMovieFromTitle(String title) {
       return movieRepository.findByTitle(title);
     }
 
@@ -28,10 +28,6 @@ public class MovieService {
     public Movie saveMovie(Movie movie) {
       return movieRepository.save(movie);
     }
-
-    public List<Movie> executeSqlQuery(String query) {
-      return movieRepository.executeCustomQuery(query); 
-  }
 }
 
     

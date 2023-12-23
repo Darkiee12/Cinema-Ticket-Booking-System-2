@@ -15,14 +15,8 @@ import User, { Credential } from "../models/User";
 import { useState } from "react";
 const Login = () => {
   const [success, setSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
-  // const emailRef = useRef();
-  // const passwordRef = useRef();
-  // const [errors, setErrors] = useState("");
-  // const [showPassword, setShowPassword] = useState(false);
-  // const loading = false;
-
-  // const [action, setAction] = useState("Sign Up");
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
@@ -30,13 +24,17 @@ const Login = () => {
       email: data.get("email") as string,
       password: data.get("password") as string,
     };
-    const user = await LoginService.login(credentials);
-    if (user) {
-      setSuccess(true);
-      setUser(user);
-    } else {
-      alert("Login failed")
+    const result = await LoginService.login(credentials);
+    if(result instanceof Response){
+        setError(result.statusText)
+    } else{
+        setUser(result as User);
+        setSuccess(true);
+        setTimeout(() => {
+            window.location.href = "/";
+        }, 2000);
     }
+    
   }
 
   return (
