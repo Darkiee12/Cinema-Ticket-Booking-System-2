@@ -48,7 +48,7 @@ export default function SignUp() {
       gender: data.get("gender") as string,
       phoneNumber: data.get("phone_number") as unknown as number,
       dateOfBirth: data.get("dob") as string,
-      tier:"member",
+      tier:"MEMBER",
     };
     await UserService.addUser(user);
 

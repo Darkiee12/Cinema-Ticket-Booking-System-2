@@ -18,6 +18,19 @@ export enum HTTPStatusCode{
   "INTERNAL_SERVER_ERROR" = 500,
 }
 
+export type Result<T, Error> = {
+  ok: true;
+  data: T;
+} | {
+  ok: false;
+  error: Error;
+} 
+
+interface Error{
+  message: string;
+  statusCode: HTTPStatusCode;
+}
+
 export default class ApiCollector<T> {
   private axiosInstance: AxiosInstance;
   constructor(baseURL: string) {
@@ -26,12 +39,20 @@ export default class ApiCollector<T> {
     });
   }
 
-  private handleError(error: any): null {
-    console.error("Error:", error);
-    return null;
+  private handleError(error: any): Error {
+    if(axios.isAxiosError(error)){
+      return {
+        message: error.message,
+        statusCode: error.response?.status || 500,
+      };
+    }
+    else return {
+      message: "Internal Server Error",
+      statusCode: 500,
+    };
   }
 
-  async get(endpoint: string, config?: AxiosRequestConfig): Promise<T | null> {
+  async get(endpoint: string, config?: AxiosRequestConfig): Promise<Result<T, Error>> {
     try {
       const response: AxiosResponse<T> = await this.axiosInstance.get(
         endpoint,
@@ -43,7 +64,7 @@ export default class ApiCollector<T> {
     }
   }
 
-  async request(config: AxiosRequestConfig): Promise<T | null> {
+  async request(config: AxiosRequestConfig): Promise<T | Error> {
     try {
       const response: AxiosResponse<T> =
         await this.axiosInstance.request(config);
@@ -53,11 +74,11 @@ export default class ApiCollector<T> {
     }
   }
 
-  async post(
+  async post<T>(
     endpoint: string,
-    data: any,
+    data: T,
     config?: AxiosRequestConfig
-  ): Promise<T | null> {
+  ): Promise<T | Error> {
     try {
       const response: AxiosResponse<T> = await this.axiosInstance.post(
         endpoint,
@@ -65,7 +86,7 @@ export default class ApiCollector<T> {
         config
       );
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       return this.handleError(error);
     }
   }
@@ -74,7 +95,7 @@ export default class ApiCollector<T> {
     endpoint: string,
     data: any,
     config?: AxiosRequestConfig
-  ): Promise<T | null> {
+  ): Promise<T | Error> {
     try {
       const response: AxiosResponse<T> = await this.axiosInstance.put(
         endpoint,
@@ -90,7 +111,7 @@ export default class ApiCollector<T> {
   async delete(
     endpoint: string,
     config?: AxiosRequestConfig
-  ): Promise<T | null> {
+  ): Promise<T | Error> {
     try {
       const response: AxiosResponse<T> = await this.axiosInstance.delete(
         endpoint,
