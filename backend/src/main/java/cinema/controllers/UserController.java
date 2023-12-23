@@ -22,9 +22,13 @@ public class UserController {
         return userService.getUsers();
     }
 
-    @PostMapping("/users/add")
-    public User addUser(@RequestBody User user) {
-        return userService.saveUser(user);
+    @PostMapping("/users/signup")
+    public ResponseEntity<Object> signUp(@RequestBody User user) {
+        if(userService.findByEmail(user.getEmail()) != null) {
+            return ResponseEntity.badRequest().body("Email already exists");
+        } 
+        userService.saveUser(user);
+        return ResponseEntity.ok().body("User added successfully");
     }
     
     @PostMapping("/users/login")
