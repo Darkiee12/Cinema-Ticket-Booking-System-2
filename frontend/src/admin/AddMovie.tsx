@@ -33,6 +33,8 @@ import oscarImg from "../assets/movies/oscar.png";
 import actorDefaultPFP from "../assets/movies/actor_default.jpg";
 import "../index.css";
 import { dateConverter } from "../utils/date";
+import { Response } from "../utils/api";
+import { setInterval } from "timers/promises";
 
 const defaultMovie: Partial<RawMovie> = {
   title: "Title goes here",
@@ -55,7 +57,7 @@ const poster: (movie: Partial<RawMovie>) => string = (movie) =>
 export default function AddMovie() {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [movie, setMovie] = useState<Partial<RawMovie>>(defaultMovie);
-  const [alert, setAlert] = useState<boolean | null>(null);
+  const [alert, setAlert] = useState<Response | null>(null);
 
   const handleSearch = async (event: FormEvent) => {
     event.preventDefault();
@@ -68,11 +70,11 @@ export default function AddMovie() {
   };
 
   const submitMovie = async () => {
-    const success = await MovieService.addMovie(
+    const result = await MovieService.addMovie(
       convertMovie(movie as RawMovie)
     );
-    setAlert(success); // Set success to the result of addMovie
-  };
+    setAlert(result);
+  }
 
   useEffect(() => {
     const bg = document.getElementById("bg");
@@ -137,7 +139,7 @@ export default function AddMovie() {
                 />
               </button>
             </div>
-            {alert === null ? null : <AlertForm success={alert} />}
+            {alert === null ? null : <AlertForm response={alert} />}
             <div className="w-full text-justify py-0 ml-[1%]">
               <div className="w-full after:clear-both before:content-[''] after:content-[''] before:table after:table zoom-100">
                 <div className="w-full block mt-[0%] mb-[0.5%] mx-[0.5%]">
@@ -386,11 +388,11 @@ const ActionButton: React.FC<{ movie: Partial<RawMovie> }> = ({ movie }) => {
   );
 };
 
-const AlertForm: React.FC<{ success: boolean | null }> = ({ success }) => {
-  const [visible, setVisible] = useState(true);
+const AlertForm: React.FC<{ response: Response }> = ({ response }) => {
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    if (success !== null) {
+    if (response !== null) {
       const timer = setTimeout(() => {
         setVisible(false);
       }, 5000);
@@ -399,33 +401,36 @@ const AlertForm: React.FC<{ success: boolean | null }> = ({ success }) => {
         clearTimeout(timer);
       };
     }
-  }, [success]);
+  }, [response, visible]);
 
   if (!visible) {
     return null; // Hide the component
   }
 
-  return success ? (
-    <div className="text-center" id="message">
+  return(
+  <div className={`text-center ${visible ? 'visible' : 'hidden'}`} id="message">
       <div className="flex justify-center items-center">
-        <FontAwesomeIcon
-          icon={faCircleCheck}
-          className="fa-regular fa-circle-check"
-          style={{ color: "#6afb09" }}
-        />
-        <p className="text-[#6afb09]">Movie updated successfully!</p>
-      </div>
-    </div>
-  ) : (
-    <div className="text-center ml-2" id="message">
-      <div className="flex justify-center items-center">
-        <FontAwesomeIcon
-          icon={faCircleXmark}
-          className="fa-regular fa-circle-xmark"
-          shake
-          style={{ color: "#ff0000" }}
-        />{" "}
-        <p className="text-[#ff0000]">An error happened!</p>
+        {response.statusCode === 200 ? (
+          <div className="flex">
+            <FontAwesomeIcon
+              icon={faCircleCheck}
+              className="fa-regular fa-circle-check"
+              style={{ color: '#6afb09' }}
+            />
+            <p className="text-[#6afb09]">Movie is added successfully!</p>
+          </div>
+        ) : response.statusCode !== null? (
+          <div className="flex">
+            <FontAwesomeIcon
+              icon={faCircleXmark}
+              className="fa-regular fa-circle-xmark"
+              shake
+              style={{ color: '#ff0000' }}
+            />{' '}
+            <p className="text-[#ff0000]">{response.message}</p>
+          </div>
+        ) : (<div></div>)
+        }
       </div>
     </div>
   );
@@ -433,23 +438,42 @@ const AlertForm: React.FC<{ success: boolean | null }> = ({ success }) => {
 
 const Actors: React.FC<{ queries: string[] | undefined }> = ({ queries }) => {
   const [actors, setActors] = useState<Actor[]>([]);
+  const handleQuery = async (name: string) => {
+    const res = await ActorService.fetchActorData(name);
+    return res instanceof Response? null : res;
+  };
+  async function fetchData(){
+    if (handleQuery == null || handleQuery == undefined){
+      setActors([]);
+    } else{
+      
+    }
+    const promises = queries!.map(handleQuery);
+
+    try {
+      const data = await Promise.all(promises);
+      if (data.length==0){
+        setActors([]);
+      }else{
+        const results = data.filter(Boolean) as Actor[];
+        setActors(results);
+      }
+    } catch (error) {
+      console.error('Error fetching actor data:', error);
+      setActors([]);
+    }
+  };
 
   useEffect(() => {
-    if (!queries) {
-      return;
+    if(queries){
+      fetchData();
     }
 
-    const fetchActor = async (name: string) => {
-      return await ActorService.fetchActorData(name);
-    };
-
-    const promises = queries.map(fetchActor);
-
-    Promise.all(promises).then((data) => {
-      const results = data.filter(Boolean) as Actor[];
-      setActors(results as Actor[]);
-    });
   }, [queries]);
+
+  if (!actors.length) {
+    return <div></div>;
+  }
 
   return (
     <>
@@ -460,29 +484,29 @@ const Actors: React.FC<{ queries: string[] | undefined }> = ({ queries }) => {
       </div>
 
       <div className="flex items-center">
-        {actors.map((actor) => (
-          <div
-            key={actor.results[0].id}
-            className="text-center flex flex-col items-center mx-auto"
-          >
-            <img
-              src={
-                actor.results[0].profile_path
-                  ? `https://image.tmdb.org/t/p/w500/${actor.results[0].profile_path}`
-                  : actorDefaultPFP
-              }
-              alt={`${actor.results[0].name} profile picture`}
-              className="h-[100px]"
-            />
-            <p className="text-sm text-[#8b8b8b] w-auto block font-semibold mt-2 font-sans">
-              {actor.results[0].name}
-            </p>
-          </div>
-        ))}
+        {actors.map((actor) =>
+          actor.results[0] ? (
+            <div key={actor.results[0].id} className="text-center flex flex-col items-center mx-auto">
+              <img
+                src={
+                  actor.results[0].profile_path
+                    ? `https://image.tmdb.org/t/p/w500/${actor.results[0].profile_path}`
+                    : actorDefaultPFP
+                }
+                alt={`${actor.results[0].name} profile picture`}
+                className="h-[100px]"
+              />
+              <p className="text-sm text-[#8b8b8b] w-auto block font-semibold mt-2 font-sans">
+                {actor.results[0].name}
+              </p>
+            </div>
+          ) : null
+        )}
       </div>
     </>
   );
 };
+
 
 const ProductionCompanies: React.FC<{ movie: Partial<RawMovie> }> = ({
   movie,
@@ -503,11 +527,10 @@ const ProductionCompanies: React.FC<{ movie: Partial<RawMovie> }> = ({
             className="text-center flex flex-col items-center w-1/3 p-5 mb-5"
           >
             <img
-              src={`${
-                company.logo_path
+              src={`${company.logo_path
                   ? baseLogoUrl + company.logo_path
                   : companyDefault
-              }`}
+                }`}
               alt={`${company.name} logo`}
               className="h-[100px]"
             />

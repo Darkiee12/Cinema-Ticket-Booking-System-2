@@ -2,15 +2,8 @@ package cinema.controllers;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import cinema.entities.Movie;
 import cinema.services.MovieService;
 import jakarta.persistence.EntityManager;
@@ -28,28 +21,41 @@ public class MovieController {
     private EntityManager entityManager;
 
     @GetMapping("/movies/get-all")
-    public List<Movie> getMovies() {
-        return movieService.getMovies();
+    public ResponseEntity<List<Movie>> getMovies() {
+        List<Movie> movies = movieService.getMovies();
+        return ResponseEntity.ok().body(movies);
     }
 
     @GetMapping("/movies/get-title/{title}")
-    public Movie getMovieFromTitle(@PathVariable String title) {
-        return movieService.getMovieFromTitle(title);
+    public ResponseEntity<List<Movie>> getMovieFromTitle(@PathVariable String title) {
+        List<Movie> movie = movieService.getMovieFromTitle(title);
+        return ResponseEntity.ok().body(movie);
     }
 
-    @GetMapping("/movies/get-imdb")
-    public Movie getMovieFromIMDB(String imdb) {
-        return movieService.getMovieFromIMDB(imdb);
+    @GetMapping("/movies/get-imdb/{imdb}")
+    public ResponseEntity<Movie> getMovieFromIMDB(@PathVariable String imdb) {
+        Movie movie = movieService.getMovieFromIMDB(imdb);
+        return ResponseEntity.ok().body(movie);
     }
 
-    @PostMapping(value = "/movies/add-movie", consumes = "application/json", produces = "application/json")
-    public Movie addMovie(@RequestBody Movie movie) {
-        return movieService.saveMovie(movie);
+    @PostMapping("/movies/add-movie")
+    public ResponseEntity<Object> addMovie(@RequestBody Movie movie) {
+        if (movieService.getMovieFromIMDB(movie.getImdbId()) != null) {
+            return ResponseEntity.badRequest().build();
+        } else {
+            movieService.saveMovie(movie);
+            return ResponseEntity.ok().build();
+        }
     }
 
     @GetMapping("/movies/sql/{query}")
-    public List<Movie> executeSql(@PathVariable String query) throws UnsupportedEncodingException {
-        String decodedUri = URLDecoder.decode(query, StandardCharsets.UTF_8.toString());
-        return entityManager.createNativeQuery(decodedUri, Movie.class).getResultList();
+    public ResponseEntity<Object> executeSql(@PathVariable String query) {
+        try {
+            String decodedUri = URLDecoder.decode(query, StandardCharsets.UTF_8.toString());
+            List<Movie> movies = entityManager.createNativeQuery(decodedUri, Movie.class).getResultList();
+            return ResponseEntity.ok().body(movies);
+        } catch (UnsupportedEncodingException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }

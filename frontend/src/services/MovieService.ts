@@ -9,67 +9,44 @@ import {
   SearchTMDB,
 } from "../models/Movie";
 import { Log } from "../utils/logger";
-const ADD_MOVIE_ENDPOINT = "http://localhost:8080/movies/add-movie";
-const GET_ALL_MOVIE_ENDPOINT = "http://localhost:8080/movies/get-all";
 const GET_MOVIE_SQL = "http://localhost:8080/movies/sql";
 
 
 export default class MovieService {
   private static api = new ApiCollector<Movie | Movie[]>("http://localhost:8080/movies/");
-  public static async getMovies(): Promise<Movie[]|null> {
+
+  public static async getMovies() {
     const response = await this.api.get("get-all");
-    if(response && response instanceof Array){
+    if(response.ok){
+      return response.data;
+    } else {
+      return response.error;
+    }
+  }
+
+  public static async addMovie(movie: Movie) {
+    console.log("Entering addMovie");
+    const response = await this.api.post("add-movie", movie);
+    console.log("Leaving addMovie");
+    if(response.ok){
       return response;
     } else {
-      return null;
+      return response.error;
     }
   }
-
-  public static async addMovie(movie: Movie): Promise<boolean> {
-    try {
-  
-      await axios.post(ADD_MOVIE_ENDPOINT, movie);
-      return true;
-    } catch (error) {
-      console.log(error);
-      return false;
-    }
-  }
-  public static async getMoviesByQuery(sql: string): Promise<Movie[]|null> {
+  public static async getMoviesByQuery(sql: string) {
     const encode = encodeURIComponent(sql);
-    try {
-      const response = await axios.get(`${GET_MOVIE_SQL}/${encode}`);
-      if (response.status == 200){
-        return response.data as Movie[];
-      } else {
-        return null;
+    const response = await this.api.get(`sql/${encode}`);
+    if(response.ok){
+      if(Array.isArray(response.data)){
+        return response.data;
       }
-    } catch (error) {
-      return null;
+    } else {
+      return response.error;
     }
   }
 }
-
-function postObjectsAsLinks<T extends Record<string, any>>(objects: T[], baseUrl: string) {
-  objects.forEach(obj => {
-    const params = Object.entries(obj)
-      .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
-      .join('&');
-
-    const url = `${baseUrl}?${params}`;
-
-    axios.post(url)
-      .then(response => {
-        console.log(`Successfully posted object: ${JSON.stringify(obj)}`);
-        console.log(response.data);
-      })
-      .catch(error => {
-        console.error(`Error posting object ${JSON.stringify(obj)}:`, error);
-      });
-  });
-}
-
-const omdbEndpoint = (id: string) => `i=${id}&apikey=${OMDB_API_KEY}`;
+const omdbEndpoint = (id: string) => `https://www.omdbapi.com/?i=${id}&apikey=${OMDB_API_KEY}`;
 
 export async function fetchMovie(
   query: string
@@ -79,47 +56,45 @@ export async function fetchMovie(
   let omdb: Partial<MovieOMDB | null> = {};
   if (/^\d+$/.test(param)) {
     tmdb = await SearchTMDBById(param);
-    omdb = await searchOMDB(tmdb?.imdb_id!);
+    omdb = await SearchOMDB(tmdb?.imdb_id!);
   } else if (/^ev\d{7}\/\d{4}(-\d)?$|^(ch|co|ev|nm|tt)\d{1,8}$/.test(param)) {
-    omdb = await searchOMDB(param);
+    omdb = await SearchOMDB(param);
     const ids = await getIdsFromExternal(omdb?.imdbID!);
     tmdb = await SearchTMDBById(ids?.id!);
   } else {
     const temp = await SearchTMDBByTitle(param);
-    const ids = await getIdsFromExternal(temp?.id!);
-    tmdb = await SearchTMDBById(ids?.id!);
-    omdb = await searchOMDB(ids?.imdb_id!);
+    tmdb = await SearchTMDBById(temp?.id!);
+    omdb = await SearchOMDB(tmdb!.imdb_id!);
   }
-  console.log({ ...tmdb, ...omdb });
   return { ...tmdb, ...omdb };
 }
 
 async function SearchTMDBById(id: string | number): Promise<MovieTMDB | null> {
   const api = new ApiCollector<MovieTMDB>("https://api.themoviedb.org/3");
-  const tmdbData = await api.request(config(id, "detail"));
-  return tmdbData ?? null;
+  const res = await api.request(config(id, "detail"));
+  return res.ok? res.data : null;
 }
 
 async function SearchTMDBByTitle(
   title: string | number
 ): Promise<MovieTMDB | null> {
   const api = new ApiCollector<SearchTMDB>("https://api.themoviedb.org/3");
-  const tmdbData = await api.request(config(title, "search"));
-  return tmdbData!.results[0] ?? null;
+  const res = await api.request(config(title, "search"));
+  return res.ok? res.data.results[0] : null;
 }
 
-async function searchOMDB(id: string): Promise<MovieOMDB | null> {
-  const omdbData = await axios.get<MovieOMDB>(
-    `https://www.omdbapi.com/?${omdbEndpoint(id)}`
-  );
-  return omdbData.data;
+async function SearchOMDB(id: string): Promise<MovieOMDB | null> {
+  const api = new ApiCollector<MovieOMDB>();
+  const res = await api.get(omdbEndpoint(id));
+  return res.ok? res.data : null;
+  
 }
 
 async function getIdsFromExternal(
   id: string | number
 ): Promise<ExternalID | null> {
   if (!id) return null;
-  const api = new ApiCollector<ExternalID>("https://api.themoviedb.org/3");
-  const externalData = await api.request(config(id, "external"));
-  return externalData;
+  const api = new ApiCollector<ExternalID>("http://api.themoviedb.org/3");
+  const res = await api.request(config(id, "external"));
+  return res.ok? res.data : null;
 }
