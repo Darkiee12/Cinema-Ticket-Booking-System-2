@@ -7,6 +7,6 @@ import cinema.entities.Company;
 public interface CompanyRepository extends JpaRepository<Company, Integer> {
     Company findById(int Id);
     List<Company> findAll();
-    Company save(Company company);
+    <S extends Company> S save(Company company);
     List<Company> save(List<Company> company);
 }

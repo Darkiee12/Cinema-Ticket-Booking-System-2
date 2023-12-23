@@ -10,7 +10,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findAll();
     // List<Comment> findByUserId(Long userId);
     // List<Comment> findByimdbId(String imdbId);
-    Comment save(Comment comment);
+    <S extends Comment> S save(Comment comment);
     void delete(Comment comment);
     void deleteByCommentId(Long commentId);
 }

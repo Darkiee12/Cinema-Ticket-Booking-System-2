@@ -7,5 +7,5 @@ import cinema.entities.Genre;
 public interface GenreRepository extends JpaRepository<Genre, Integer>{
     Genre findById(int id);
     List<Genre> findAll();
-    Genre save(Genre genre); 
+    <S extends Genre> S save(Genre genre); 
 }

@@ -1,8 +1,7 @@
 package cinema.entities;
 import java.sql.Date;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,7 +30,7 @@ public class User{
     @Enumerated(EnumType.STRING)
     private Tier tier;
 
-    @JsonIgnore
+    @JsonIgnoreProperties("user")
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private List<Ticket> tickets;

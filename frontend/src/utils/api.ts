@@ -2,12 +2,13 @@ import axios, {
   AxiosInstance,
   AxiosResponse,
   AxiosRequestConfig,
+  AxiosError,
 } from "axios";
-
+import { Err, Ok, Try } from "./result";
 export const TMDB_API_KEY = process.env.REACT_APP_TMDB_KEY;
 export const OMDB_API_KEY = process.env.REACT_APP_OMDB_KEY;
 
-export enum HTTPStatusCode{
+export enum HTTPStatusCode {
   "OK" = 200,
   "CREATED" = 201,
   "BAD_REQUEST" = 400,
@@ -18,108 +19,87 @@ export enum HTTPStatusCode{
   "INTERNAL_SERVER_ERROR" = 500,
 }
 
-export type Result<T, Error> = {
-  ok: true;
-  data: T;
-} | {
-  ok: false;
-  error: Error;
-} 
-
-interface Error{
+export class Response {
   message: string;
   statusCode: HTTPStatusCode;
+  constructor(message: string, statusCode: HTTPStatusCode) {
+    this.message = message;
+    this.statusCode = statusCode;
+  }
 }
+
 
 export default class ApiCollector<T> {
   private axiosInstance: AxiosInstance;
-  constructor(baseURL: string) {
+  constructor(baseURL?: string) {
     this.axiosInstance = axios.create({
       baseURL,
     });
   }
 
-  private handleError(error: any): Error {
-    if(axios.isAxiosError(error)){
-      return {
-        message: error.message,
-        statusCode: error.response?.status || 500,
-      };
-    }
-    else return {
-      message: "Internal Server Error",
-      statusCode: 500,
-    };
-  }
-
-  async get(endpoint: string, config?: AxiosRequestConfig): Promise<Result<T, Error>> {
-    try {
-      const response: AxiosResponse<T> = await this.axiosInstance.get(
-        endpoint,
-        config
+  async get(endpoint: string, config?: AxiosRequestConfig) {
+    const res = await Try(this.axiosInstance.get<T>(endpoint, config));
+    if (res.ok) {
+      return Ok({ data: res.data });
+    } else {
+      return Err(
+        new Response(res.error.message, (res.error as AxiosError).status!)
       );
-      return response.data;
-    } catch (error) {
-      return this.handleError(error);
     }
   }
 
-  async request(config: AxiosRequestConfig): Promise<T | Error> {
-    try {
-      const response: AxiosResponse<T> =
-        await this.axiosInstance.request(config);
-      return response.data;
-    } catch (error) {
-      return this.handleError(error);
-    }
-  }
-
-  async post<T>(
-    endpoint: string,
-    data: T,
-    config?: AxiosRequestConfig
-  ): Promise<T | Error> {
-    try {
-      const response: AxiosResponse<T> = await this.axiosInstance.post(
-        endpoint,
-        data,
-        config
+  async request(config: AxiosRequestConfig) {
+    const res = await Try(this.axiosInstance.request<T>(config));
+    if (res.ok) {
+      return Ok({ data: res.data });
+    } else {
+      return Err(
+        new Response(res.error.message, (res.error as AxiosError).status!)
       );
-      return response.data;
-    } catch (error: any) {
-      return this.handleError(error);
     }
   }
 
-  async put(
-    endpoint: string,
-    data: any,
-    config?: AxiosRequestConfig
-  ): Promise<T | Error> {
-    try {
-      const response: AxiosResponse<T> = await this.axiosInstance.put(
-        endpoint,
-        data,
-        config
+  async login<R>(endpoint: string, data: R, config?: AxiosRequestConfig) {
+    const res = await Try(this.axiosInstance.post<T>(endpoint, data, config));
+    if (res.ok) {
+      return Ok({ data: res.data });
+    } else {
+      return Err(
+        new Response(res.error.message, (res.error as AxiosError).status!)
       );
-      return response.data;
-    } catch (error) {
-      return this.handleError(error);
     }
   }
 
-  async delete(
-    endpoint: string,
-    config?: AxiosRequestConfig
-  ): Promise<T | Error> {
-    try {
-      const response: AxiosResponse<T> = await this.axiosInstance.delete(
-        endpoint,
-        config
+  async post(endpoint: string, data: T, config?: AxiosRequestConfig) {
+    const res = await Try(this.axiosInstance.post<T>(endpoint, data, config));
+    if (res.ok) {
+      return Ok(new Response(res.statusText, res.status));
+    } else {
+      return Err(
+        new Response(res.error.message, (res.error as AxiosError).status!)
       );
-      return response.data;
-    } catch (error) {
-      return this.handleError(error);
+    }
+  }
+
+  async put(endpoint: string, data: any, config?: AxiosRequestConfig) {
+    const res = await Try(this.axiosInstance.put(endpoint, data, config));
+    if (res.ok) {
+      return Ok({ data: res.data });
+    } else {
+      return Err(
+        new Response(res.error.message, (res.error as AxiosError).status!)
+      );
+    }
+  }
+
+  async delete(endpoint: string, config?: AxiosRequestConfig) {
+    const res = await Try(this.axiosInstance.delete(endpoint, config));
+    if (res.ok) {
+      return Ok({ data: res.data });
+    } else {
+      return Err(
+        new Response(res.error.message, (res.error as AxiosError).status!)
+      );
     }
   }
 }

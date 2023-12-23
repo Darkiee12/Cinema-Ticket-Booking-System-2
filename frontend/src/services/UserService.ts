@@ -16,14 +16,12 @@ export default class UserService {
     }
   }
 
-  public static async addUser(user: User): Promise<> {
-    const res = this.api.post("signup", user);
-
-    try {
-      await axios.post(ADD_USER_ENDPOINT, user);
-      return true;
-    } catch (error) {
-      return false;
+  public static async addUser(user: User) {
+    const res = await this.api.post("signup", user);
+    if (res.ok) {
+      return res;
+    } else {
+      return res.error;
     }
   }
 }

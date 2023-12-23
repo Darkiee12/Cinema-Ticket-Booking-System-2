@@ -4,57 +4,16 @@ import { Movie } from "../models/Movie";
 import { Box, Button, TextField } from "@mui/material";
 import {} from "@mui/material";
 
-const MovieTable: React.FC<{ movies: Movie[] }> = ({ movies }) => {
-  return (
-    <div>
-      <div className="row px-2">
-        <table className="table table-striped table-bordered">
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Year</th>
-              <th>Duration</th>
-
-              {/* Add more table headers for Actors, Directors, Language, Genre, etc. */}
-            </tr>
-          </thead>
-          <tbody>
-            {movies.map((movie) => (
-              <tr key={movie.imdbId}>
-                <td>{movie.title}</td>
-                <td>{movie.year}</td>
-                <td>{movie.runtime}</td>
-                {/* Add more table cells for Actors, Directors, Language, Genre, etc. */}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-};
-
 const MoviePage: React.FC = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
-
-  // useEffect(() => {
-  //   MovieService.getMovies().then((fetchedMovies: Movie[] | null) => {
-  //     if (fetchedMovies) setMovies(fetchedMovies);
-  //     else alert("Failed to fetch movies");
-  //   });
-  // }, []);
+  const [error, setError] = useState<string | null>(null);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const sqlQuery: string = data.get("sql") as string;
-    try {
-      const fetchedMovies = await MovieService.getMoviesByQuery(sqlQuery);
-      if (fetchedMovies) setMovies(fetchedMovies);
-      else alert("Failed to fetch movies");
-    } catch (error) {
-      alert(error);
-    }
+    const result = await MovieService.getMoviesByQuery(sqlQuery);
+    result instanceof Array ? setMovies(result) : setError(result!.message); 
   }
 
   return (
@@ -81,7 +40,7 @@ const MoviePage: React.FC = () => {
           </Button>
         </div>
       </Box>
-      {/* <MovieTable movies={movies} /> */}
+      {error && <div className="w-full text-red-500 italic text-xs">{error}</div>}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
         {movies.map((movie, index) => (
           <MovieComponent key={index} movie={movie} />
