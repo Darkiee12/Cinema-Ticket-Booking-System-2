@@ -56,6 +56,10 @@ public class MovieController {
             return ResponseEntity.ok().body(movies);
         } catch (UnsupportedEncodingException e) {
             return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            // Catch any other exceptions, including SQL exceptions
+            String errorMessage = "Error executing SQL query: " + e.getMessage();
+            return ResponseEntity.badRequest().body(errorMessage);
         }
     }
 }

@@ -2,6 +2,8 @@ package cinema.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import cinema.entities.Auditorium;
 import cinema.entities.Cinema;
 import cinema.repositories.CinemaRepository;
 
@@ -9,9 +11,12 @@ import java.util.List;
 
 @Service
 public class CinemaService {
-    @Autowired CinemaRepository cinemaRepository;
+    private final int capacity = 100;
+    @Autowired
+    CinemaRepository cinemaRepository;
 
-    public CinemaService() {}
+    public CinemaService() {
+    }
 
     public List<Cinema> getCinemas() {
         return cinemaRepository.findAll();
@@ -33,7 +38,4 @@ public class CinemaService {
         cinemaRepository.deleteByCinemaId(cinemaId);
     }
 
-    public Cinema saveMovie(Cinema cinema) {
-      return cinemaRepository.save(cinema);
-    }
 }

@@ -6,27 +6,23 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
 import cinema.services.TicketService;
 import cinema.entities.Ticket;
-import cinema.pojos.TicketRequest;
-
 import java.util.List;
 
-@CrossOrigin(origins="http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 public class TicketController {
-    @Autowired TicketService ticketService;
+    @Autowired
+    TicketService ticketService;
 
     @GetMapping("/tickets")
-    public List<Ticket> getTickets(){
+    public List<Ticket> getTickets() {
         return ticketService.getTickets();
     }
 
-
-
     @PostMapping("/tickets")
-    public Ticket addTicket(@RequestBody TicketRequest ticketRequest) {
-        return ticketService.addTicket(ticketRequest);
+    public Ticket addTicket(@RequestBody Ticket ticket) {
+        return ticketService.addTicket(ticket);
     }
 }
