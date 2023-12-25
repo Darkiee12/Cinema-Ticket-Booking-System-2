@@ -8,8 +8,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AuditoriumSeatRepository extends JpaRepository<AuditoriumSeat, Long> {
     AuditoriumSeat findByAuditoriumSeatId(Long auditoriumSeatId);
+
     List<AuditoriumSeat> findAll();
-    AuditoriumSeat save(AuditoriumSeat auditoriumSeat);
+
+    <S extends AuditoriumSeat> S save(AuditoriumSeat auditoriumSeat);
+
     void delete(AuditoriumSeat auditoriumSeat);
+
     void deleteByAuditoriumSeatId(Long auditoriumSeatId);
 }

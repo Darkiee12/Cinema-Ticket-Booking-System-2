@@ -8,6 +8,7 @@ import java.sql.Time;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "shows")
@@ -28,20 +29,24 @@ public class Show {
 
     @Column(name = "end_time")
     private Time endTime;
-    
+
+    @JsonIgnoreProperties("shows")
     @ManyToOne
     @JoinColumn(name = "auditorium_id", referencedColumnName = "auditorium_id")
     private Auditorium auditorium;
 
+    @JsonIgnoreProperties("shows")
     @ManyToOne
     @JoinColumn(name = "imdb_id", referencedColumnName = "imdb_id")
     private Movie movie;
 
+    @JsonIgnoreProperties("shows")
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "show_id")
     private List<Ticket> tickets;
 
+    @JsonIgnoreProperties("shows")
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "show_id")
