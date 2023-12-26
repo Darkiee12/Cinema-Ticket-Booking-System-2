@@ -4,14 +4,16 @@ import java.sql.Date;
 import java.sql.Time;
 
 public record ShowDTO(
-        Long showId,
-        String imdbId,
-        String title,
-        String auditoriumName,
-        String cinemaName,
-        Time starTime,
-        Time endTime,
-        Date date
+    Long showId,
+    String imdbId,
+    String title,
+    Long auditoriumId,
+    String auditoriumName,
+    Long cinemaId,
+    String cinemaName,
+    Time startTime,
+    Time endTime,
+    Date date
 
 ) {
 
