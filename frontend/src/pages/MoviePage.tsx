@@ -2,14 +2,12 @@ import React, { useState, FormEvent } from "react";
 import MovieService from "../services/MovieService";
 import { Movie } from "../models/Movie";
 import { Box, Button, TextField } from "@mui/material";
-import { } from "@mui/material";
 import Loading from "../components/Loading";
 
 const MoviePage: React.FC = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-
   async function handleSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
     setLoading(true);
@@ -74,9 +72,8 @@ const MovieComponent: React.FC<{ movie: Movie }> = ({ movie }) => {
       </div>
       <div className="flex space-x-1 p-3">
         <Button variant="contained" href="#" className="w-1/2 p-3 h-3rem text-5xl font-bold"> Detail </Button>
-        <Button variant="contained" color="success" href="#" className="w-1/2 p-3 h-3rem text-5xl font-bold"> Book </Button>
+        <Button variant="contained" color="success" href={`../shows/${movie.imdbId}`} className="w-1/2 p-3 h-3rem text-5xl font-bold"> Book </Button>
       </div>
-
     </div>
   )
 }
