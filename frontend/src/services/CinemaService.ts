@@ -1,25 +1,25 @@
-import axios from "axios";
 import Cinema from "../models/Cinema";
-const CINEMA_ENDPOINT = "http://localhost:8080/cinemas/add-cinema";
+import ApiCollector from "../utils/api";
 
-export default class MovieService {
-  public static async getCinemas(): Promise<Cinema[]> {
-    try {
-      const response = await axios.get(CINEMA_ENDPOINT);
-      const movies = response.data as Cinema[];
-      return movies;
-    } catch (error) {
-      // Handle errors here
-      throw error;
+export default class CinemaService {
+  private static api = new ApiCollector<Cinema | Cinema[]>(
+    "http://localhost:8080/cinemas/"
+  );
+  public static async getCinema() {
+    const response = await this.api.get("get-all");
+    if(response.ok){
+      return response.data;
+    } else {
+      return response.error;
     }
   }
 
-  public static async addCinema(cinema: Cinema): Promise<boolean> {
-    try {
-      await axios.post(CINEMA_ENDPOINT, cinema);
-      return true;
-    } catch (error) {
-      return false;
+  public static async addCinema(cinema: Cinema) {
+    const response = await this.api.post("add-cinema", cinema);
+    if (response.ok) {
+      return response;
+    } else {
+      return response.error;
     }
   }
 }
