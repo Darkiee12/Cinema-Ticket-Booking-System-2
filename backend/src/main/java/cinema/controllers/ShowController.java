@@ -26,7 +26,7 @@ public class ShowController {
         return ResponseEntity.ok().body(show);
     }
 
-    @GetMapping("/shows/movies/{imdbId}")
+    @GetMapping("/shows/{imdbId}")
     public ResponseEntity<List<ShowDTO>> getShowsByImdbId(@PathVariable String imdbId) {
         List<ShowDTO> show = showService.getShowsByImdbId(imdbId);
         return ResponseEntity.ok().body(show);
