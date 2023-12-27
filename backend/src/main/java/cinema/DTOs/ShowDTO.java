@@ -13,8 +13,6 @@ public record ShowDTO(
     String cinemaName,
     Time startTime,
     Time endTime,
-    Date date
-
-) {
+    Date date) {
 
 }

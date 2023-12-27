@@ -14,68 +14,40 @@ export default interface Show{
   title: string;
 }
 
-
-export interface TransformedShow {
-  showId: number;
-  auditoriumName: string;
-  cinemaName: string;
-  startTime: string;
-  endTime: string;
-}
-
-export interface TransformedCinema {
-  date: Date;
-  cinemaName: string;
-  cinemaId: number; // You might want to add a cinemaId or some identifier for the cinema
-  shows: TransformedShow[];
-}
-
-interface TransformedData {
+export interface ShowResponse {
   imdbId: string;
   title: string;
-  cinema: TransformedCinema[];
+  startTime: string;
+  endTime: string;
+  auditoriumId: number;
+  auditoriumName: string;
+  cinemaId: number;
+  cinemaName: string;
 }
 
-export function getShowsFromCInemasFromImdbId(originalData: Show[]): TransformedData {
-  const transformedData: TransformedData = {
-      imdbId: "",
-      title: "",
-      cinema: [],
-  };
+export function transformShows(inputArray: any[][]): ShowResponse[][] {
+  const groupedMovies: { [key: string]: ShowResponse[] } = {};
 
-  originalData.forEach((originalShow) => {
-      // Check if the imdbId and title are not set in the transformedData
-      if (!transformedData.imdbId) {
-          transformedData.imdbId = originalShow.imdbId;
-          transformedData.title = originalShow.title;
-      }
+  inputArray.forEach((item) => {
+    const [imdbId, title, startTime, endTime, auditoriumId, auditoriumName, cinemaId, cinemaName] = item;
 
-      // Find or create the cinema in the transformedData
-      let cinema = transformedData.cinema.find(
-          (c) => c.cinemaName === originalShow.cinemaName
-      );
+    if (!groupedMovies[cinemaName]) {
+      groupedMovies[cinemaName] = [];
+    }
 
-      if (!cinema) {
-          cinema = {
-              date: originalShow.date,
-              cinemaName: originalShow.cinemaName,
-              cinemaId: transformedData.cinema.length + 1, // Assign a unique cinemaId
-              shows: [],
-          };
-          transformedData.cinema.push(cinema);
-      }
+    const movie: ShowResponse = {
+      imdbId,
+      title,
+      startTime,
+      endTime,
+      auditoriumId,
+      auditoriumName,
+      cinemaId,
+      cinemaName,
+    };
 
-      // Add the transformed show data to the cinema
-      const transformedShow: TransformedShow = {
-          showId: originalShow.showId,
-          auditoriumName: originalShow.auditoriumName,
-          cinemaName: originalShow.cinemaName,
-          startTime: originalShow.startTime,
-          endTime: originalShow.endTime,
-      };
-
-      cinema.shows.push(transformedShow);
+    groupedMovies[cinemaName].push(movie);
   });
 
-  return transformedData;
+  return Object.values(groupedMovies);
 }
