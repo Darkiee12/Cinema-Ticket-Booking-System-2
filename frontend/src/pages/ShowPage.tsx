@@ -1,44 +1,53 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import Show, { TransformedCinema, TransformedShow, getShowsFromCInemasFromImdbId } from "../models/Show";
-import { Response } from "../utils/api";
+import { ShowResponse } from "../models/Show";
 import ShowService from "../services/ShowService";
 import Loading from "../components/Loading";
-// Inside ShowPage component
+import { useNavigate } from "react-router-dom";
+
 export default function ShowPage() {
+  const navigate = useNavigate();
   const imdbId = useParams<{ imdbId: string }>().imdbId;
-  const [show, setShow] = useState<Show[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  const [show, setShow] = useState<ShowResponse[][]>([]);
+  const [error, setError] = useState<boolean>(false);
   const [toggle, setToggle] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [currentDate, setCurrentDate] = useState<Date>(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
+  // useEffect(() => {
+  //   alert("Selected date: " + selectedDate);
+  // }, [selectedDate]);
+  useEffect(() => {
+    if (imdbId === undefined) {
+      // Redirect to ../movies
+      navigate('../movies');
+    }
+  }, [imdbId, navigate]);
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await ShowService.getShowFromMovie(imdbId!);
+        const response = await ShowService.getShowFromMovieImdbIdAndDate(imdbId!, getFormattedDate(selectedDate));
         setLoading(false);
         setShow(response instanceof Array ? response : []);
-        setError(response instanceof Array ? null : (response as Response).message);
+        setError(response instanceof Array ? false : true);
       } catch (error) {
-        setError('An error occurred while fetching data.');
+        setError(true);
       }
     };
 
-    if (show.length === 0 && error === null) {
-      fetchData();
-    }
-  }, [show, error]);
+    fetchData();
+  }, [selectedDate]);
+
   return (
     <div className="w-full h-full">
+      <p className="w-full text-center text-xs italic ">You are booking tickets for {show?.[0]?.[0]?.title || ""}! 
+        <a className="text-blue-500 hover:underline" href="../movies"> Incorrect movie?</a>
+      </p>
       <div className="w-full h-auto mt-5 justify-center items-center p-1 border-b-2 border-b-blue-400">
-        <DatesComponent toggle={toggle} setToggle={setToggle} onDateClick={setCurrentDate} />
+        <DatesComponent toggle={toggle} setToggle={setToggle} onDateClick={setSelectedDate} />
       </div>
-      {loading && <Loading />}
-      <div className="w-full mt-2">
-        <CinemasComponent shows={show} date={currentDate} />
-      </div>
+        <CinemaComponent shows={show} loading={loading} />
     </div>
   );
 }
@@ -81,46 +90,55 @@ const DateComponent = ({ index, day, toggle, setToggle, onDateClick }: { index: 
 };
 
 
-const CinemasComponent = ({ shows, date }: { shows: Show[], date: Date }) => {
-  const cinemas = getShowsFromCInemasFromImdbId(shows)
-    .cinema
-    // .filter((cinema) =>
-    //   {
-    //     console.log("From database:", cinema.date)
-    //     console.log("From selection: ", date);
-    //     cinema.date == date
-    //   }
-    // );
+const CinemaComponent: React.FC<{ shows: ShowResponse[][], loading: boolean }> = ({ shows, loading }) => {
+  if (loading) {
+    return <Loading />;
+  }
   return (
-    <div className="w-full border-b-2 border-b-gray-400 p-2 mb-2">
-      {cinemas.map((cinema, i) => {
-        return <CinemaComponent key={i} cinema={cinema} />
-      })}
+    <div className="w-full pt-5">
+      {shows.map((cinema, i) => (
+        <div key={i} className={`${(i ^ 1) === i + 1 ? "w-full h-full bg-[#FDFBFA] " : "w-full h-full bg-white"}`}>
+          <ShowComponent key={i} shows={cinema} />;
+        </div>
+      ))}
     </div>
-  )
-}
-
-const CinemaComponent: React.FC<{ cinema: TransformedCinema }> = ({ cinema }) => {
+  );
+};
+const ShowComponent: React.FC<{ shows: ShowResponse[] }> = ({ shows }) => {
   return (
-    <div className="w-full">
-      <p className="font-bold text-2xl">{cinema.cinemaName}</p>
+    <div className="w-full p-3">
+      <p className="font-bold text-2xl">{shows[0].cinemaName}</p>
       <div className="flex flex-wrap">
-        {cinema.shows.map((show, i) => (
-          <div key={i} className="w-1/5 p-2">
-            <ShowComponent show={show} />
-          </div>
-        ))}
+  {shows
+    .slice() // create a shallow copy to avoid mutating the original array
+    .sort((a, b) => {
+      const startTimeA = new Date(`1970-01-01T${a.startTime}`);
+      const startTimeB = new Date(`1970-01-01T${b.startTime}`);
+      return startTimeA.getTime() - startTimeB.getTime();
+    })
+    .map((show, i) => (
+      <div key={i} className="w-1/5 p-2">
+        <TimeComponent show={show} />
       </div>
+    ))}
+</div>
+    </div>
+  );
+};
 
+const TimeComponent: React.FC<{ show: ShowResponse }> = ({ show }) => {
+  return (
+    <div className="border-2 rounded w-50 h-20 mx-auto flex items-center justify-center hover:bg-blue-400 hover:text-white">
+      <p className="text-base">{show.startTime.slice(0, 5)}</p>
     </div>
   );
 };
 
 
-const ShowComponent: React.FC<{ show: TransformedShow }> = ({ show }) => {
-  return (
-    <div className="border-2 rounded w-50 h-20 mx-auto flex items-center justify-center hover:bg-blue-400 hover:text-white">
-      <p className="text-base">{show.startTime}</p>
-    </div>
-  );
+function getFormattedDate(date: Date): string {
+  const year: number = date.getFullYear();
+  const month: string = String(date.getMonth() + 1).padStart(2, '0'); // Adding 1 to the month because months are zero-based
+  const day: string = String(date.getDate()).padStart(2, '0');
+  const formattedDate: string = `${year}-${month}-${day}`;
+  return formattedDate;
 }

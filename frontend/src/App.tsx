@@ -10,7 +10,7 @@ import SignUp from "./pages/SignUp";
 import ListUserComponent from "./pages/User";
 function App() {
   return (
-    <div>
+    <div className="w-full min-h-screen">
       <NavBar />
       <Router>
         <Routes>

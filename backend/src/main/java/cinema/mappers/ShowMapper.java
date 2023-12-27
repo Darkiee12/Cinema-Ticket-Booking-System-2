@@ -9,19 +9,19 @@ import cinema.entities.Show;
 
 @Service
 public class ShowMapper implements Function<Show, ShowDTO> {
-  @Override
-  public ShowDTO apply(Show show) {
-    return new ShowDTO(
-        show.getShowId(),
-        show.getMovie().getImdbId(),
-        show.getMovie().getTitle(),
-        show.getAuditorium().getAuditoriumId(),
-        show.getAuditorium().getName(),
-        show.getAuditorium().getCinema().getCinemaId(),
-        show.getAuditorium().getCinema().getName(),
-        show.getStartTime(),
-        show.getEndTime(),
-        show.getDate());
+    @Override
+    public ShowDTO apply(Show show) {
+        return new ShowDTO(
+                show.getShowId(),
+                show.getMovie().getImdbId(),
+                show.getMovie().getTitle(),
+                show.getAuditorium().getAuditoriumId(),
+                show.getAuditorium().getName(),
+                show.getAuditorium().getCinema().getCinemaId(),
+                show.getAuditorium().getCinema().getName(),
+                show.getStartTime(),
+                show.getEndTime(),
+                show.getDate());
 
-  }
+    }
 }
