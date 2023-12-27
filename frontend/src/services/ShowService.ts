@@ -1,4 +1,4 @@
-import Show from "../models/Show";
+import Show, { transformShows } from "../models/Show";
 import ApiCollector from "../utils/api";
 
 export default class ShowService {
@@ -14,10 +14,11 @@ export default class ShowService {
     }
   }
 
-  public static async getShowFromMovie(imdbId: string){
-    const response = await this.api.get(imdbId);
+  public static async getShowFromMovieImdbIdAndDate(imdbId: string, date: string){
+    const api = new ApiCollector<any[][]>("http://localhost:8080/shows/");
+    const response = await api.get(`${imdbId}/${date}`);
     if(response.ok){
-      return response.data;
+      return transformShows(response.data);
     } else {
       return response.error;
     }

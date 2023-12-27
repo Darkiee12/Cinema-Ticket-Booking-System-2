@@ -11,6 +11,7 @@ import cinema.repositories.AuditoriumRepository;
 import cinema.repositories.MovieRepository;
 import cinema.repositories.ShowRepository;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -46,13 +47,17 @@ public class ShowService {
         showRepository.deleteByShowId(showId);
     }
 
-    public List<ShowDTO> getShowsByImdbId(String imdbId) {
+    public List<ShowDTO> getShowsByImdbIdAndDate(String imdbId, Date date) {
         return showRepository
-                .findByMovieImdbId(imdbId)
+                .findByMovieImdbIdAndDate(imdbId, date)
                 .stream()
                 .map(showMapper)
                 .collect(Collectors.toList());
 
+    }
+
+    public List<Object[]> findShowsByDateAndImdbId(Date date, String imdbId) {
+        return showRepository.findShowsByDateAndImdbId(date, imdbId);
     }
 
 }

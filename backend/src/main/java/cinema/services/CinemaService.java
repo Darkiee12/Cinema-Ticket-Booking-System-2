@@ -7,6 +7,7 @@ import cinema.entities.Auditorium;
 import cinema.entities.Cinema;
 import cinema.repositories.CinemaRepository;
 
+import java.sql.Date;
 import java.util.List;
 
 @Service
@@ -36,6 +37,10 @@ public class CinemaService {
 
     public void deleteCinemaById(Long cinemaId) {
         cinemaRepository.deleteByCinemaId(cinemaId);
+    }
+
+    public List<Cinema> findCinemaByImdbIdAndDate(String imdbId, Date date) {
+        return cinemaRepository.findCinemaByImdbIdAndDate(imdbId, date);
     }
 
 }
