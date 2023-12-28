@@ -24,6 +24,16 @@ export default class MovieService {
     }
   }
 
+  public static async getMovieByImdbId(id: string) {
+    const response = await this.api.get(`get-imdb/${id}`);
+    if(response.ok){
+      return response.data as Movie;
+    } else {
+      return response.error;
+    }
+
+  }
+
   public static async addMovie(movie: Movie) {
     console.log("Entering addMovie");
     const response = await this.api.post("add-movie", movie);

@@ -1,19 +1,15 @@
 package cinema.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-
 import cinema.DTOs.ShowDTO;
 import cinema.entities.Show;
 import cinema.mappers.ShowMapper;
 import cinema.repositories.AuditoriumRepository;
 import cinema.repositories.MovieRepository;
 import cinema.repositories.ShowRepository;
-
 import java.sql.Date;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Service
