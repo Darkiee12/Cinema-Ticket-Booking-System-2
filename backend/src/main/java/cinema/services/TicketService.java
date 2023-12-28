@@ -2,10 +2,7 @@ package cinema.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import cinema.entities.Show;
 import cinema.entities.Ticket;
-import cinema.entities.TicketStatus;
-import cinema.entities.User;
 import cinema.repositories.ShowRepository;
 import cinema.repositories.TicketRepository;
 import cinema.repositories.UserRepository;

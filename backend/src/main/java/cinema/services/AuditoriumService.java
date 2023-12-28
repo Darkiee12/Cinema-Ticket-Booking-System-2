@@ -3,12 +3,7 @@ package cinema.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import cinema.entities.Auditorium;
-import cinema.entities.AuditoriumSeat;
-import cinema.entities.Cinema;
-import cinema.entities.SeatType;
 import cinema.repositories.AuditoriumRepository;
-import cinema.repositories.CinemaRepository;
-
 import java.util.List;
 
 @Service

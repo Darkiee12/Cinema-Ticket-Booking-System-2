@@ -2,17 +2,13 @@ package cinema.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import cinema.entities.Auditorium;
 import cinema.entities.Cinema;
 import cinema.repositories.CinemaRepository;
-
 import java.sql.Date;
 import java.util.List;
 
 @Service
 public class CinemaService {
-    private final int capacity = 100;
     @Autowired
     CinemaRepository cinemaRepository;
 
