@@ -1,13 +1,10 @@
 package cinema.repositories;
 
 import cinema.entities.Show;
-
 import java.sql.Date;
 import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 public interface ShowRepository extends JpaRepository<Show, Long> {
     Show findByShowId(Long showId);
