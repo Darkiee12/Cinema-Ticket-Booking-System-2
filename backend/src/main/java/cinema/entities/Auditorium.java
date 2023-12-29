@@ -16,7 +16,6 @@ import jakarta.persistence.*;
 @Getter
 @Setter
 public class Auditorium {
-    @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "auditorium_id")
@@ -28,8 +27,8 @@ public class Auditorium {
     @Column(name = "seats")
     private Integer seats;
 
-    @JsonIgnoreProperties("auditorium")
-    @ManyToOne
+    @JsonIgnoreProperties("auditoriums")
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "cinema_id", referencedColumnName = "cinema_id")
     private Cinema cinema;
 

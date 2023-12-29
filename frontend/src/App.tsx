@@ -8,6 +8,7 @@ import AdminRouter from "./routes/AdminRouter/AdminRouter";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import ListUserComponent from "./pages/User";
+import Booking from "./pages/Booking";
 function App() {
   return (
     <div className="w-full min-h-screen">
@@ -20,6 +21,7 @@ function App() {
           <Route path="/user" element={<ListUserComponent/>} /> 
           <Route path="/movies" element={<ListMovieComponent />} />
           <Route path="/shows/:imdbId" element={<ShowPage />} />
+          <Route path="/booking/:showId" element={<Booking />} />
           {/* Include AdminRouter here */}
           <Route path="/admin/*" element={<AdminRouter />} />
         </Routes>

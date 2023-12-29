@@ -1,8 +1,12 @@
 package cinema.entities;
+
 import lombok.Getter;
 import lombok.Setter;
 import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -10,7 +14,6 @@ import jakarta.persistence.*;
 @Getter
 @Setter
 public class AuditoriumSeat {
-    @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "auditorium_seat_id")
@@ -23,11 +26,14 @@ public class AuditoriumSeat {
     @Column(name = "type")
     private SeatType type;
 
-    @ManyToOne
+    @JsonIgnore
+    @JsonIgnoreProperties("auditoriumSeats") //
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "auditorium_id", referencedColumnName = "auditorium_id")
     private Auditorium auditorium;
 
     @JsonIgnore
+    @JsonIgnoreProperties("auditoriumSeat") //
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "auditorium_seat_id", referencedColumnName = "auditorium_seat_id")
     private List<ShowSeat> showSeats;

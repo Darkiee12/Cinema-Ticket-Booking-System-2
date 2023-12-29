@@ -15,6 +15,7 @@ export default interface Show{
 }
 
 export interface ShowResponse {
+  showId: number;
   imdbId: string;
   title: string;
   startTime: string;
@@ -29,13 +30,14 @@ export function transformShows(inputArray: any[][]): ShowResponse[][] {
   const groupedMovies: { [key: string]: ShowResponse[] } = {};
 
   inputArray.forEach((item) => {
-    const [imdbId, title, startTime, endTime, auditoriumId, auditoriumName, cinemaId, cinemaName] = item;
+    const [showId, imdbId, title, startTime, endTime, auditoriumId, auditoriumName, cinemaId, cinemaName] = item;
 
     if (!groupedMovies[cinemaName]) {
       groupedMovies[cinemaName] = [];
     }
 
     const movie: ShowResponse = {
+      showId,
       imdbId,
       title,
       startTime,

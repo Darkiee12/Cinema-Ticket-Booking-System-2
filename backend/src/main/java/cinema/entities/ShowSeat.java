@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.*;
 
@@ -12,7 +13,6 @@ import jakarta.persistence.*;
 @Getter
 @Setter
 public class ShowSeat {
-    @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "show_seat_id")
@@ -22,15 +22,18 @@ public class ShowSeat {
     @Column(name = "status")
     private SeatStatus status;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("showSeats") //
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "show_id", referencedColumnName = "show_id")
     private Show show;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("showSeats") //
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "auditorium_seat_id", referencedColumnName = "auditorium_seat_id")
     private AuditoriumSeat auditoriumSeat;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("showSeats") //
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ticket_id", referencedColumnName = "ticket_id")
     private Ticket ticket;
 }

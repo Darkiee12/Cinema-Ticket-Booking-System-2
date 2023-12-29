@@ -5,8 +5,8 @@ import lombok.Setter;
 import jakarta.persistence.*;
 import java.sql.Date;
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -15,7 +15,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Getter
 @Setter
 public class Show {
-    @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "show_id")
@@ -30,25 +29,34 @@ public class Show {
     @Column(name = "end_time")
     private Time endTime;
 
-    @JsonIgnoreProperties("shows")
-    @ManyToOne
+    @JsonIgnoreProperties("shows") //
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "auditorium_id", referencedColumnName = "auditorium_id")
     private Auditorium auditorium;
 
-    @JsonIgnoreProperties("shows")
-    @ManyToOne
+    @JsonIgnoreProperties("shows") //
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "imdb_id", referencedColumnName = "imdb_id")
     private Movie movie;
 
-    @JsonIgnoreProperties("shows")
-    @JsonIgnore
+    @JsonIgnoreProperties("show") //
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "show_id")
-    private List<Ticket> tickets;
+    private List<Ticket> tickets = new ArrayList<>();
 
-    @JsonIgnoreProperties("shows")
-    @JsonIgnore
+    @JsonIgnoreProperties("show") //
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "show_id")
-    private List<ShowSeat> showsSeats;
+    private List<ShowSeat> showSeats = new ArrayList<>();
+
+    @PostPersist
+    public void postPersist() {
+        for (AuditoriumSeat auditoriumSeat : auditorium.getAuditoriumSeats()) {
+            ShowSeat showSeat = new ShowSeat();
+            showSeat.setStatus(SeatStatus.AVAILABLE);
+            showSeat.setShow(this);
+            showSeat.setAuditoriumSeat(auditoriumSeat);
+            showSeats.add(showSeat);
+        }
+    }
 }

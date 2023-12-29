@@ -4,15 +4,13 @@ import lombok.Getter;
 import lombok.Setter;
 import jakarta.persistence.*;
 import java.util.Date;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "comments")
 @Getter
 @Setter
-public class Comment{
-    @JsonIgnore
+public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comment_id")
@@ -25,10 +23,12 @@ public class Comment{
     @Column(name = "timestamp")
     private Date timestamp;
 
+    @JsonIgnoreProperties("comments")
     @ManyToOne
     @JoinColumn(name = "imdb_id", referencedColumnName = "imdb_id")
     private Movie movie;
 
+    @JsonIgnoreProperties("comments")
     @ManyToOne
     @JoinColumn(name = "ticket_id", referencedColumnName = "ticket_id")
     private Ticket ticket;
