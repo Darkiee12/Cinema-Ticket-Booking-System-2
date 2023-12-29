@@ -13,17 +13,80 @@ import { Container } from "@mui/material";
 import LoginService from "../services/LoginService";
 import User, { Credential } from "../models/User";
 import { useState } from "react";
+// import axios from "../api/axios";
+// import { useAxiosPrivate } from "../hooks/useAxiosPrivate";
+// import { useNavigate,useLocation } from "react-router-dom";
 const Login = () => {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
     const credentials: Credential = {
       email: data.get("email") as string,
-      password: data.get("password") as string,
-    };
+      password: data.get("password") as string}
+    // try{
+    //   const response = await axios.post(LOGIN_URL,JSON.stringify(credentials.email,credentials.password),
+    //   {
+    //     headers:{'Content-Type':'application/json'},withCredentials:true
+    // }
+    //   );
+    //   console.log(JSON.stringify(response?.data));
+    //   const accessToken = response?.data?.accessToken;
+    //   const tiers= response?.data?.tiers;
+    //   setAuth(email,password,accessToken,tiers);
+    //   setUser('');
+    //   setPassword('');
+    //   navigate(from ,{replace:true});
+    // }catch(err){
+    //   if(!err.response){
+    //     setError('Network error');
+    //   else if(err.response.status === 400){
+    //     setError('Invalid credentials');
+    //   }
+    //   else if(err.response.status === 401){
+    //     setError('Unauthorized');
+    //   }else{
+    //     setError('Something went wrong');
+    //   }
+    //   errRef.current.focus;
+    // }
+
+    // const data = new FormData(e.currentTarget);
+    // const credentials: Credential = {
+    //   email: data.get("email") as string,
+    //   password: data.get("password") as string,
+    // };
+  //   const User = () => {
+  //     const navigate = useNavigate();
+  //     const location = useLocation();
+  //     const axiosPrivate = useAxiosPrivate();
+  //     const [users, setUsers] = useState<any[]>([]);
+  //     const refresh= UserRefreshToken();
+  //     useEffect (() => {
+  //       let isMutated = true;
+  //       const controller = new AbortController();
+
+  //       const getUsers = async () => {
+  //         try{
+  //             const response=await axios.get('/users', {
+  //             signal: controller.signal,
+  //           });
+  //           console.log(response.data);
+  //           isMounted && setUsers(response.data);
+  //           }catch(err){
+  //             console.error(err);
+  //             navigate('/login',{state{from:location},replace:true});
+  //           }
+  //           getUsers();
+  //           return() => {
+  //             isMounted = false;
+  //             controller.abort();
+  //         },[];
+  //       };
+  //     });
+  //   };
     const result = await LoginService.login(credentials);
     if(result instanceof Response){
         setError(result.statusText)
