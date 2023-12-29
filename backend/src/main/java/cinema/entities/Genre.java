@@ -1,4 +1,5 @@
 package cinema.entities;
+
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
@@ -22,8 +23,7 @@ public class Genre {
     @Column(name = "name", length = 255)
     private String name;
 
-    @ManyToMany(mappedBy = "genre", fetch = FetchType.LAZY)
-    //@JsonBackReference
-    @JsonIgnoreProperties("genre")
+    @ManyToMany(mappedBy = "genres", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("genres")
     private List<Movie> movies;
 }

@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import { ShowResponse } from "../models/Show";
 import ShowService from "../services/ShowService";
 import Loading from "../components/Loading";
-import { useNavigate } from "react-router-dom";
 import { Movie } from "../models/Movie";
 import MovieService from "../services/MovieService";
 import { Response } from "../utils/api";
@@ -40,16 +39,6 @@ export default function ShowPage() {
     fetchMovie();
   }, []);
 
-  // useEffect(() => {
-  //   const bg = document.getElementById("bg");
-  //   try{
-  //     bg!.style.backgroundImage = `linear-gradient(rgba(30, 27, 38, 0.95), rgba(30, 27, 38, 0.95)), url("${movie?.poster}")}`;
-  //   }
-  //   catch(e){
-
-  //   }
-  // }, [movie])
-
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -72,7 +61,7 @@ export default function ShowPage() {
         <a className="text-blue-500 hover:underline" href="../movies"> Incorrect movie?</a>
       </p>
       {movie && (
-        <div 
+        <div
           className="bg-center bg-cover bg-no-repeat relative w-100% h-[80vh]"
           style={{
             backgroundImage: `linear-gradient(rgba(30, 27, 38, 0.95), rgba(30, 27, 38, 0.95)), url("${movie.poster}")`,
@@ -96,12 +85,14 @@ export default function ShowPage() {
         </div>
 
       )}
-
-      <div className="w-full h-auto mt-5 justify-center items-center p-1 border-b-2 border-b-blue-400">
-        <DatesComponent toggle={toggle} setToggle={setToggle} onDateClick={setSelectedDate} />
+      <div className="w-full min-h-screen">
+        <div className="w-full h-auto mt-5 justify-center items-center p-1 border-b-2 border-b-blue-400">
+          <DatesComponent toggle={toggle} setToggle={setToggle} onDateClick={setSelectedDate} />
+        </div>
+        <CinemaComponent shows={show} loading={loading} />
       </div>
-      <CinemaComponent shows={show} loading={loading} />
     </div>
+
   );
 }
 
@@ -179,9 +170,12 @@ const ShowComponent: React.FC<{ shows: ShowResponse[] }> = ({ shows }) => {
 
 const TimeComponent: React.FC<{ show: ShowResponse }> = ({ show }) => {
   return (
-    <div className="border-2 rounded w-50 h-20 mx-auto flex items-center justify-center hover:bg-blue-400 hover:text-white">
+    <button 
+    className="border-2 rounded w-50 h-20 mx-auto flex items-center justify-center hover:bg-blue-400 hover:text-white"
+    onClick={() => window.location.href = `/booking/${show.showId}`}
+    >
       <p className="text-base">{show.startTime.slice(0, 5)}</p>
-    </div>
+    </button>
   );
 };
 
@@ -233,13 +227,13 @@ const MovieAttribute: React.FC<{ movie: Movie }> = ({ movie }) => {
             </li>
           )}
 
-          {movie.genre && movie.genre.length > 0 && (
+          {movie.genres && movie.genres.length > 0 && (
             <li className="text-xs text-[#8b8b8b] w-auto block float-left font-semibold mr-1.5 font-sans overflow-auto">
               <FontAwesomeIcon
                 icon={faMagnifyingGlass}
                 className="fa-regular"
               />{" "}
-              {movie.genre.map((genre) => genre.name).join(", ")}
+              {movie.genres.map((genre) => genre.name).join(", ")}
             </li>
           )}
 
@@ -250,13 +244,13 @@ const MovieAttribute: React.FC<{ movie: Movie }> = ({ movie }) => {
             </li>
           )}
 
-          {movie.language && movie.language.length > 0 && (
+          {movie.languages && movie.languages.length > 0 && (
             <li className="text-xs text-[#8b8b8b] w-auto block float-left font-semibold mr-1.5 font-sans overflow-auto">
               <FontAwesomeIcon
                 icon={faLanguage}
                 className="fa-solid fa-language"
               />{" "}
-              {movie.language
+              {movie.languages
                 .map((language) => language.englishName)
                 .join(", ")}
             </li>

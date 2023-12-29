@@ -29,4 +29,5 @@ public class AuditoriumService {
     public void saveAuditorium(Auditorium auditorium) {
         auditoriumRepository.save(auditorium);
     }
+
 }

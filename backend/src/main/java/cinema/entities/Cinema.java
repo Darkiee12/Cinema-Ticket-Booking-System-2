@@ -3,11 +3,8 @@ package cinema.entities;
 import lombok.Getter;
 import lombok.Setter;
 import jakarta.persistence.*;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -15,7 +12,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Getter
 @Setter
 public class Cinema {
-    @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cinema_id")
@@ -24,8 +20,8 @@ public class Cinema {
     @Column(name = "name", length = 255)
     private String name;
 
-    @Column(name = "auditoriums")
-    private Integer auditoriums;
+    @Column(name = "capacity")
+    private Integer capacity;
 
     @Column(name = "address", columnDefinition = "TEXT")
     private String address;
@@ -39,16 +35,16 @@ public class Cinema {
     @JsonIgnoreProperties("cinema")
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "cinema_id", referencedColumnName = "cinema_id")
-    private List<Auditorium> auditoriumList = new ArrayList<>();
+    private List<Auditorium> auditoriums = new ArrayList<>();
 
     @PostPersist
     private void initalizeAuditoriums() {
-        for (int i = 0; i < auditoriums; i++) {
+        for (int i = 0; i < capacity; i++) {
             Auditorium auditorium = new Auditorium();
             auditorium.setCinema(this);
             auditorium.setSeats(100);
             auditorium.setName("Auditorium " + (i + 1));
-            auditoriumList.add(auditorium);
+            auditoriums.add(auditorium);
         }
     }
 }

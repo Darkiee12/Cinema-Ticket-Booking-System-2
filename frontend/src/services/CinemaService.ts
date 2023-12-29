@@ -2,11 +2,11 @@ import Cinema from "../models/Cinema";
 import ApiCollector from "../utils/api";
 
 export default class CinemaService {
-  private static api = new ApiCollector<Cinema | Cinema[]>(
+  private static api = new ApiCollector(
     "http://localhost:8080/cinemas/"
   );
   public static async getCinema() {
-    const response = await this.api.get("get-all");
+    const response = await this.api.get<Cinema[]>("get-all");
     if(response.ok){
       return response.data;
     } else {

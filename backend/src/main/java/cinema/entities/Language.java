@@ -19,15 +19,14 @@ public class Language {
     @Id
     @Column(name = "iso_639_1", unique = true, length = 2)
     private String iso6391;
-    
+
     @Column(name = "english_name", length = 255)
     private String englishName;
 
     @Column(name = "name", length = 255)
     private String name;
 
-    @ManyToMany(mappedBy = "language")
-    //@JsonBackReference
-    @JsonIgnoreProperties("language")
+    @ManyToMany(mappedBy = "languages")
+    @JsonIgnoreProperties("languages")
     private List<Movie> movies;
 }

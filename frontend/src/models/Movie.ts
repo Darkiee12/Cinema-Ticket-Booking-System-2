@@ -120,11 +120,11 @@ export interface Movie {
   rated: string;
   released: string;
   runtime: number;
-  genre: GenreDB[];
+  genres: GenreDB[];
   cast: CastMemberDB[];
   companies: CompanyDB[];
   plot: string;
-  language: LanguageDB[];
+  languages: LanguageDB[];
   originalLanguage: string;
   countries: CountryDB[];
   awards: string;
@@ -163,10 +163,10 @@ export function convertMovie(movie: RawMovie): Movie {
     rated: movie.Rated,
     released: movie.release_date,
     runtime: movie.runtime,
-    genre: movie.genres,
+    genres: movie.genres,
     cast: cast,
     plot: movie.overview,
-    language: movie.spoken_languages.map((
+    languages: movie.spoken_languages.map((
       language
     ) => ({
       iso6391: language.iso_639_1,

@@ -1,6 +1,7 @@
 package cinema.controllers;
 
 import java.sql.Date;
+import java.sql.Time;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,7 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import cinema.services.ShowService;
+import cinema.DTOs.ShowDTO;
 import cinema.entities.Show;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -36,13 +39,25 @@ public class ShowController {
     // }
 
     @PostMapping("/shows/add-show")
-    public ResponseEntity<Show> addShow(@RequestBody Show show) {
-        if (showService.getShowById(show.getShowId()) != null) {
-            return ResponseEntity.badRequest().build();
+    public ResponseEntity<String> addShow(@RequestBody Show show) {
+        String imdbId = show.getMovie().getImdbId();
+        Date date = show.getDate();
+        Time startTime = show.getStartTime();
+        Long auditoriumId = show.getAuditorium().getAuditoriumId();
+        if (showService.findDuplicateShow(imdbId, date, startTime, auditoriumId).isPresent()) {
+            return ResponseEntity.badRequest().body("Show already exists");
         } else {
             showService.saveShow(show);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok().body("Show added");
         }
+    }
+
+    @PostMapping("/shows/add-shows")
+    public ResponseEntity<Show> addShows(@RequestBody List<Show> shows) {
+        for (Show show : shows) {
+            addShow(show);
+        }
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/shows/{imdbId}/{date}")
@@ -58,4 +73,15 @@ public class ShowController {
             return new ResponseEntity<>(shows, HttpStatus.OK);
         }
     }
+
+    @GetMapping("/shows/{id}")
+    public ResponseEntity<ShowDTO> getShowById(@PathVariable Long id) {
+        ShowDTO show = showService.getShowById(id);
+        if (show != null) {
+            return ResponseEntity.ok().body(show);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }

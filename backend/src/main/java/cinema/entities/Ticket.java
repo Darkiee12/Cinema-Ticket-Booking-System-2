@@ -7,13 +7,13 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "tickets")
 @Getter
 @Setter
 public class Ticket {
-    @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ticket_id")
@@ -29,16 +29,18 @@ public class Ticket {
     @Column(name = "status")
     private TicketStatus status;
 
+    @JsonIgnoreProperties("tickets")
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
 
+    @JsonIgnoreProperties("tickets")
     @ManyToOne
     @JoinColumn(name = "show_id", referencedColumnName = "show_id")
     private Show show;
 
-    @JsonIgnore
+    @JsonIgnoreProperties("ticket")
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "ticket_id")
-    private List<ShowSeat> showSeat;
+    private List<ShowSeat> showSeats;
 }

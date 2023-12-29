@@ -4,6 +4,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import cinema.DTOs.MovieDTO;
 import cinema.entities.Movie;
 import cinema.services.MovieService;
 import jakarta.persistence.EntityManager;
@@ -21,8 +23,8 @@ public class MovieController {
     private EntityManager entityManager;
 
     @GetMapping("/movies/get-all")
-    public ResponseEntity<List<Movie>> getMovies() {
-        List<Movie> movies = movieService.getMovies();
+    public ResponseEntity<List<MovieDTO>> getMovies() {
+        List<MovieDTO> movies = movieService.getMovies();
         return ResponseEntity.ok().body(movies);
     }
 
