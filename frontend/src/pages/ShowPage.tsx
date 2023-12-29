@@ -227,13 +227,13 @@ const MovieAttribute: React.FC<{ movie: Movie }> = ({ movie }) => {
             </li>
           )}
 
-          {movie.genre && movie.genre.length > 0 && (
+          {movie.genres && movie.genres.length > 0 && (
             <li className="text-xs text-[#8b8b8b] w-auto block float-left font-semibold mr-1.5 font-sans overflow-auto">
               <FontAwesomeIcon
                 icon={faMagnifyingGlass}
                 className="fa-regular"
               />{" "}
-              {movie.genre.map((genre) => genre.name).join(", ")}
+              {movie.genres.map((genre) => genre.name).join(", ")}
             </li>
           )}
 
@@ -244,13 +244,13 @@ const MovieAttribute: React.FC<{ movie: Movie }> = ({ movie }) => {
             </li>
           )}
 
-          {movie.language && movie.language.length > 0 && (
+          {movie.languages && movie.languages.length > 0 && (
             <li className="text-xs text-[#8b8b8b] w-auto block float-left font-semibold mr-1.5 font-sans overflow-auto">
               <FontAwesomeIcon
                 icon={faLanguage}
                 className="fa-solid fa-language"
               />{" "}
-              {movie.language
+              {movie.languages
                 .map((language) => language.englishName)
                 .join(", ")}
             </li>

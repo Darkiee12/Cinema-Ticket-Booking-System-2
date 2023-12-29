@@ -13,10 +13,10 @@ const GET_MOVIE_SQL = "http://localhost:8080/movies/sql";
 
 
 export default class MovieService {
-  private static api = new ApiCollector<Movie | Movie[]>("http://localhost:8080/movies/");
+  private static api = new ApiCollector("http://localhost:8080/movies/");
 
   public static async getMovies() {
-    const response = await this.api.get("get-all");
+    const response = await this.api.get<Movie[]>("get-all");
     if(response.ok){
       return response.data;
     } else {
@@ -25,9 +25,9 @@ export default class MovieService {
   }
 
   public static async getMovieByImdbId(id: string) {
-    const response = await this.api.get(`get-imdb/${id}`);
+    const response = await this.api.get<Movie>(`get-imdb/${id}`);
     if(response.ok){
-      return response.data as Movie;
+      return response.data;
     } else {
       return response.error;
     }
@@ -36,7 +36,7 @@ export default class MovieService {
 
   public static async addMovie(movie: Movie) {
     console.log("Entering addMovie");
-    const response = await this.api.post("add-movie", movie);
+    const response = await this.api.post<Movie>("add-movie", movie);
     console.log("Leaving addMovie");
     if(response.ok){
       return response;
@@ -46,11 +46,9 @@ export default class MovieService {
   }
   public static async getMoviesByQuery(sql: string) {
     const encode = encodeURIComponent(sql);
-    const response = await this.api.get(`sql/${encode}`);
+    const response = await this.api.get<Movie[]>(`sql/${encode}`);
     if(response.ok){
-      if(Array.isArray(response.data)){
-        return response.data;
-      }
+      return response.data;
     } else {
       return response.error;
     }
@@ -80,22 +78,22 @@ export async function fetchMovie(
 }
 
 async function SearchTMDBById(id: string | number): Promise<MovieTMDB | null> {
-  const api = new ApiCollector<MovieTMDB>("https://api.themoviedb.org/3");
-  const res = await api.request(config(id, "detail"));
+  const api = new ApiCollector("https://api.themoviedb.org/3");
+  const res = await api.request<MovieTMDB>(config(id, "detail"));
   return res.ok? res.data : null;
 }
 
 async function SearchTMDBByTitle(
   title: string | number
 ): Promise<MovieTMDB | null> {
-  const api = new ApiCollector<SearchTMDB>("https://api.themoviedb.org/3");
-  const res = await api.request(config(title, "search"));
+  const api = new ApiCollector("https://api.themoviedb.org/3");
+  const res = await api.request<SearchTMDB>(config(title, "search"));
   return res.ok? res.data.results[0] : null;
 }
 
 async function SearchOMDB(id: string): Promise<MovieOMDB | null> {
-  const api = new ApiCollector<MovieOMDB>();
-  const res = await api.get(omdbEndpoint(id));
+  const api = new ApiCollector();
+  const res = await api.get<MovieOMDB>(omdbEndpoint(id));
   return res.ok? res.data : null;
   
 }
@@ -104,7 +102,7 @@ async function getIdsFromExternal(
   id: string | number
 ): Promise<ExternalID | null> {
   if (!id) return null;
-  const api = new ApiCollector<ExternalID>("http://api.themoviedb.org/3");
-  const res = await api.request(config(id, "external"));
+  const api = new ApiCollector("http://api.themoviedb.org/3");
+  const res = await api.request<ExternalID>(config(id, "external"));
   return res.ok? res.data : null;
 }

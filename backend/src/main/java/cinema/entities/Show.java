@@ -44,19 +44,13 @@ public class Show {
     @JoinColumn(name = "show_id")
     private List<Ticket> tickets = new ArrayList<>();
 
-    @JsonIgnoreProperties("show") //
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "show_id")
-    private List<ShowSeat> showSeats = new ArrayList<>();
-
     @PostPersist
     public void postPersist() {
         for (AuditoriumSeat auditoriumSeat : auditorium.getAuditoriumSeats()) {
             ShowSeat showSeat = new ShowSeat();
             showSeat.setStatus(SeatStatus.AVAILABLE);
-            showSeat.setShow(this);
             showSeat.setAuditoriumSeat(auditoriumSeat);
-            showSeats.add(showSeat);
+            auditoriumSeat.getShowSeats().add(showSeat);
         }
     }
 }

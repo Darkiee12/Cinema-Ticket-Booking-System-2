@@ -13,15 +13,10 @@ public class ShowMapper implements Function<Show, ShowDTO> {
     public ShowDTO apply(Show show) {
         return new ShowDTO(
                 show.getShowId(),
-                show.getMovie().getImdbId(),
-                show.getMovie().getTitle(),
-                show.getAuditorium().getAuditoriumId(),
-                show.getAuditorium().getName(),
-                show.getAuditorium().getCinema().getCinemaId(),
-                show.getAuditorium().getCinema().getName(),
+                show.getDate(),
                 show.getStartTime(),
                 show.getEndTime(),
-                show.getDate());
+                show.getAuditorium());
 
     }
 }

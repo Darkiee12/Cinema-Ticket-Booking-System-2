@@ -40,8 +40,9 @@ public class ShowService {
         return showRepository.findAll();
     }
 
-    public Show getShowById(Long showId) {
-        return showRepository.findByShowId(showId);
+    public ShowDTO getShowById(Long showId) {
+        Show show = showRepository.findByShowId(showId);
+        return showMapper.apply(show);
     }
 
     public Optional<Show> findDuplicateShow(String imdbId, Date date, Time startTime, Long auditoriumId) {

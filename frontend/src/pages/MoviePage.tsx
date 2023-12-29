@@ -15,6 +15,7 @@ const MoviePage: React.FC = () => {
     const sqlQuery: string = data.get("sql") as string;
     const result = await MovieService.getMoviesByQuery(sqlQuery);
     result instanceof Array ? setMovies(result) : setError(result!.message);
+    console.log(result);
     setLoading(false);
   }
 
@@ -64,9 +65,9 @@ const MovieComponent: React.FC<{ movie: Movie }> = ({ movie }) => {
         </div>
         <div>
           <strong className="text-2xl">{movie.title}</strong>
-          <CsvComponent name="Genre" data={movie.genre} displayKey="name" />
+          <CsvComponent name="Genre" data={movie.genres} displayKey="name" />
           <p><b>Runtime: </b>{movie.runtime} minutes.</p>
-          <CsvComponent name="Languages" data={movie.language} displayKey="englishName" />
+          <CsvComponent name="Languages" data={movie.languages} displayKey="englishName" />
           <p><b>Released: </b>{movie.released}</p>
         </div>
       </div>

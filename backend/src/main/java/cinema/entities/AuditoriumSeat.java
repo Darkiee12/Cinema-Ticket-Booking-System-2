@@ -2,6 +2,8 @@ package cinema.entities;
 
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -32,9 +34,8 @@ public class AuditoriumSeat {
     @JoinColumn(name = "auditorium_id", referencedColumnName = "auditorium_id")
     private Auditorium auditorium;
 
-    @JsonIgnore
     @JsonIgnoreProperties("auditoriumSeat") //
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "auditorium_seat_id", referencedColumnName = "auditorium_seat_id")
-    private List<ShowSeat> showSeats;
+    private List<ShowSeat> showSeats = new ArrayList<>();
 }

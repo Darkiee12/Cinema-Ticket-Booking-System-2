@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import cinema.services.ShowService;
+import cinema.DTOs.ShowDTO;
 import cinema.entities.Show;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -74,9 +75,10 @@ public class ShowController {
     }
 
     @GetMapping("/shows/{id}")
-    public ResponseEntity<Show> getShowById(@PathVariable Long id) {
-        if (showService.getShowById(id) != null) {
-            return ResponseEntity.ok().body(showService.getShowById(id));
+    public ResponseEntity<ShowDTO> getShowById(@PathVariable Long id) {
+        ShowDTO show = showService.getShowById(id);
+        if (show != null) {
+            return ResponseEntity.ok().body(show);
         } else {
             return ResponseEntity.notFound().build();
         }

@@ -24,11 +24,6 @@ public class ShowSeat {
 
     @JsonIgnoreProperties("showSeats") //
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "show_id", referencedColumnName = "show_id")
-    private Show show;
-
-    @JsonIgnoreProperties("showSeats") //
-    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "auditorium_seat_id", referencedColumnName = "auditorium_seat_id")
     private AuditoriumSeat auditoriumSeat;
 

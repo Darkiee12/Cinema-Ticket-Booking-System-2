@@ -1,12 +1,12 @@
-import Show, { transformShows } from "../models/Show";
+import Show, { ShowFull, transformShows } from "../models/Show";
 import ApiCollector from "../utils/api";
 
 export default class ShowService {
-  private static api = new ApiCollector<Show | Show[]>(
+  private static api = new ApiCollector(
     "http://localhost:8080/shows/"
   );
   public static async getShow() {
-    const response = await this.api.get("get-all");
+    const response = await this.api.get<Show[]>("get-all");
     if(response.ok){
       return response.data;
     } else {
@@ -15,10 +15,18 @@ export default class ShowService {
   }
 
   public static async getShowFromMovieImdbIdAndDate(imdbId: string, date: string){
-    const api = new ApiCollector<any[][]>("http://localhost:8080/shows/");
-    const response = await api.get(`${imdbId}/${date}`);
+    const response = await this.api.get<any[][]>(`${imdbId}/${date}`);
     if(response.ok){
       return transformShows(response.data);
+    } else {
+      return response.error;
+    }
+  }
+
+  public static async getShowFromId(id: number){
+    const response = await this.api.get<ShowFull>(`/${id}`);
+    if(response.ok){
+      return response.data;
     } else {
       return response.error;
     }

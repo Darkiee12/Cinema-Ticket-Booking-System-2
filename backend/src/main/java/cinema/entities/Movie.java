@@ -111,6 +111,7 @@ public class Movie {
         @JsonIgnoreProperties("movies")
         private List<Rating> ratings;
 
+        @JsonIgnore
         @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
         @JoinColumn(name = "imdb_id", referencedColumnName = "imdb_id")
         @JsonIgnoreProperties("movie")

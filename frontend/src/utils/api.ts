@@ -29,7 +29,7 @@ export class Response {
 }
 
 
-export default class ApiCollector<T> {
+export default class ApiCollector {
   private axiosInstance: AxiosInstance;
   constructor(baseURL?: string) {
     this.axiosInstance = axios.create({
@@ -37,7 +37,7 @@ export default class ApiCollector<T> {
     });
   }
 
-  async get(endpoint: string, config?: AxiosRequestConfig) {
+  async get<T>(endpoint: string, config?: AxiosRequestConfig) {
     const res = await Try(this.axiosInstance.get<T>(endpoint, config));
     if (res.ok) {
       return Ok({ data: res.data });
@@ -48,7 +48,7 @@ export default class ApiCollector<T> {
     }
   }
 
-  async request(config: AxiosRequestConfig) {
+  async request<T>(config: AxiosRequestConfig) {
     const res = await Try(this.axiosInstance.request<T>(config));
     if (res.ok) {
       return Ok({ data: res.data });
@@ -59,7 +59,7 @@ export default class ApiCollector<T> {
     }
   }
 
-  async login<R>(endpoint: string, data: R, config?: AxiosRequestConfig) {
+  async login<R, T>(endpoint: string, data: R, config?: AxiosRequestConfig) {
     const res = await Try(this.axiosInstance.post<T>(endpoint, data, config));
     if (res.ok) {
       return Ok({ data: res.data });
@@ -70,7 +70,7 @@ export default class ApiCollector<T> {
     }
   }
 
-  async post(endpoint: string, data: T, config?: AxiosRequestConfig) {
+  async post<T>(endpoint: string, data: T, config?: AxiosRequestConfig) {
     const res = await Try(this.axiosInstance.post<T>(endpoint, data, config));
     if (res.ok) {
       return Ok(new Response(res.statusText, res.status));

@@ -1,3 +1,5 @@
+import { Movie } from "./Movie";
+
 export default interface Show{
   showId: number;
   auditoriumId: number;
@@ -6,6 +8,7 @@ export default interface Show{
   date: Date;
   startTime: string;
   endTime: string;
+  movie?: Movie;
 }
 
 export default interface Show{
@@ -26,6 +29,44 @@ export interface ShowResponse {
   cinemaName: string;
 }
 
+export interface ShowFull {
+  showId: number;
+  date: string;
+  startTime: string;
+  endTime: string;
+  auditorium: Auditorium;
+}
+
+interface Auditorium{
+  auditoriumId: number;
+  name: string;
+  seats: number;
+  cinema: Cinema;
+  auditoriumSeats: AuditoriumSeat[];
+  shows: Show[]
+}
+
+interface Cinema {
+  cinemaId: number;
+  name: string;
+  capacity: number;
+  address: string;
+  phoneNumber: number;
+  email: string;
+}
+export interface AuditoriumSeat {
+  auditoriumSeatId: number;
+  seatNumber: number;
+  type: string;
+  showSeats: ShowSeat[];
+}
+
+export interface ShowSeat {
+  showSeatId: number;
+  name?: string;
+  status: string;
+  ticket: any; 
+}
 export function transformShows(inputArray: any[][]): ShowResponse[][] {
   const groupedMovies: { [key: string]: ShowResponse[] } = {};
 
