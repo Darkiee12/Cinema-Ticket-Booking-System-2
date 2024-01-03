@@ -1,10 +1,10 @@
 import { Routes, Route } from "react-router-dom";
 
-import AdminDashboard from "../../admin/Dashboard";
-import AdminUsers from "../../admin/AdminUsers";
-import AdminSettings from "../../admin/AdminSettings";
-import AddMovie from "../../admin/AddMovie";
-import AddCinema from "../../admin/AddCinema";
+import AdminDashboard from "../../admin/Dashboard.tsx";
+import AdminUsers from "../../admin/AdminUsers.tsx";
+import AdminSettings from "../../admin/AdminSettings.tsx";
+import AddMovie from "../../admin/AddMovie.tsx";
+import AddCinema from "../../admin/AddCinema.tsx";
 
 const AdminRouter = () => {
   return (

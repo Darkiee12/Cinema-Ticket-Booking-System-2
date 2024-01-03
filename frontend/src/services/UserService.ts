@@ -1,6 +1,6 @@
 import axios from "axios";
-import User from "../models/User";
-import ApiCollector from "../utils/api";
+import User from "../models/User.ts";
+import ApiCollector from "../utils/api.ts";
 const GET_USER_ENDPOINT = "http://localhost:8080/users/get-all";
 
 export default class UserService {

@@ -1,8 +1,8 @@
 import React, { useState, FormEvent } from "react";
-import MovieService from "../services/MovieService";
-import { Movie } from "../models/Movie";
+import MovieService from "../services/MovieService.ts";
+import { Movie } from "../models/Movie.ts";
 import { Box, Button, TextField } from "@mui/material";
-import Loading from "../components/Loading";
+import Loading from "../components/Loading.tsx";
 
 const MoviePage: React.FC = () => {
   const [movies, setMovies] = useState<Movie[]>([]);

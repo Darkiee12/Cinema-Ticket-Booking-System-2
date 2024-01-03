@@ -1,5 +1,5 @@
-import ApiCollector from "../utils/api";
-import User, {Credential} from "../models/User";
+import ApiCollector from "../utils/api.ts";
+import User, {Credential} from "../models/User.ts";
 
 
 

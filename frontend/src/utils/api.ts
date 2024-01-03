@@ -1,12 +1,11 @@
 import axios, {
   AxiosInstance,
-  AxiosResponse,
   AxiosRequestConfig,
   AxiosError,
 } from "axios";
-import { Err, Ok, Try } from "./result";
-export const TMDB_API_KEY = process.env.REACT_APP_TMDB_KEY;
-export const OMDB_API_KEY = process.env.REACT_APP_OMDB_KEY;
+import { Err, Ok, Try } from "./result.ts";
+export const TMDB_API_KEY = import.meta.env.VITE_APP_TMDB_KEY;
+export const OMDB_API_KEY = import.meta.env.VITE_APP_OMDB_KEY;
 
 export enum HTTPStatusCode {
   "OK" = 200,

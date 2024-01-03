@@ -1,5 +1,5 @@
-import Show, { ShowFull, transformShows } from "../models/Show";
-import ApiCollector from "../utils/api";
+import Show, { ShowFull, transformShows } from "../models/Show.ts";
+import ApiCollector from "../utils/api.ts";
 
 export default class ShowService {
   private static api = new ApiCollector(

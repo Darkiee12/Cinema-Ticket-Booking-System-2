@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import UserService from "../services/UserService";
-import User from "../models/User";
+import UserService from "../services/UserService.ts";
+import User from "../models/User.ts";
 
 export default function ListUserComponent(): JSX.Element {
   const [users, setUsers] = useState<User[]>([]);

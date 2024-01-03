@@ -1,5 +1,4 @@
-import axios from "axios";
-import ApiCollector, { config, OMDB_API_KEY } from "../utils/api";
+import ApiCollector, { config, OMDB_API_KEY } from "../utils/api.ts";
 import {
   ExternalID,
   Movie,
@@ -7,10 +6,7 @@ import {
   MovieTMDB,
   RawMovie,
   SearchTMDB,
-} from "../models/Movie";
-import { Log } from "../utils/logger";
-const GET_MOVIE_SQL = "http://localhost:8080/movies/sql";
-
+} from "../models/Movie.ts";
 
 export default class MovieService {
   private static api = new ApiCollector("http://localhost:8080/movies/");

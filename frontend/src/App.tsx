@@ -1,14 +1,14 @@
 import "./App.css";
 import { Routes, Route } from "react-router";
-import NavBar from "./components/navbar";
-import ListMovieComponent from "./pages/MoviePage";
-import ShowPage from "./pages/ShowPage";
+import NavBar from "./components/navbar.tsx";
+import ListMovieComponent from "./pages/MoviePage.tsx";
+import ShowPage from "./pages/ShowPage.tsx";
 import { BrowserRouter as Router } from "react-router-dom";
-import AdminRouter from "./routes/AdminRouter/AdminRouter";
-import Login from "./pages/Login";
-import SignUp from "./pages/SignUp";
-import ListUserComponent from "./pages/User";
-import Booking from "./pages/Booking";
+import AdminRouter from "./routes/AdminRouter/AdminRouter.tsx";
+import Login from "./pages/Login.tsx";
+import SignUp from "./pages/SignUp.tsx";
+import ListUserComponent from "./pages/User.tsx";
+import Booking from "./pages/Booking.tsx";
 function App() {
   return (
     <div className="w-full min-h-screen">
