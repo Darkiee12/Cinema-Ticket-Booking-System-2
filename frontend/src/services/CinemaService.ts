@@ -1,5 +1,5 @@
-import Cinema from "../models/Cinema";
-import ApiCollector from "../utils/api";
+import Cinema from "../models/Cinema.ts";
+import ApiCollector from "../utils/api.ts";
 
 export default class CinemaService {
   private static api = new ApiCollector(

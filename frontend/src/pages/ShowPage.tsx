@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { ShowResponse } from "../models/Show";
-import ShowService from "../services/ShowService";
-import Loading from "../components/Loading";
-import { Movie } from "../models/Movie";
-import MovieService from "../services/MovieService";
-import { Response } from "../utils/api";
+import { ShowResponse } from "../models/Show.ts";
+import ShowService from "../services/ShowService.ts";
+import Loading from "../components/Loading.tsx";
+import { Movie } from "../models/Movie.ts";
+import MovieService from "../services/MovieService.ts";
+import { Response } from "../utils/api.ts";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCalendar,

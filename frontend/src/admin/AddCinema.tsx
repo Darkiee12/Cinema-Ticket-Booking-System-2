@@ -7,8 +7,8 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Cinema from "../models/Cinema";
-import CinemaService from "../services/CinemaService";
+import Cinema from "../models/Cinema.ts";
+import CinemaService from "../services/CinemaService.ts";
 import cinemaBg from "../assets/cinema/cinema_bg.jpg";
 
 export default function AddCinema() {

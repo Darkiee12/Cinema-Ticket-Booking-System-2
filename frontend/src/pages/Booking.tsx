@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import ShowService from '../services/ShowService';
-import { AuditoriumSeat, ShowFull, ShowSeat } from '../models/Show';
-import Loading from '../components/Loading';
+import ShowService from '../services/ShowService.ts';
+import { AuditoriumSeat, ShowFull, ShowSeat } from '../models/Show.ts';
+import Loading from '../components/Loading.tsx';
 
 export default function Booking() {
   const showId = useParams<{ showId: string }>().showId;

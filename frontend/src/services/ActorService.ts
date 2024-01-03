@@ -1,5 +1,5 @@
-import Actor from "../models/Actor";
-import ApiCollector, { config } from "../utils/api";
+import Actor from "../models/Actor.ts";
+import ApiCollector, { config } from "../utils/api.ts";
 
 export default class ActorService {
   private static api = new ApiCollector("https://api.themoviedb.org/3");
